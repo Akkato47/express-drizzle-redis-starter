@@ -1,0 +1,16 @@
+node_modules/
+dist/
+
+# Lock files
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
+
+# app logs
+*.log
+
+# env files
+.env
+
+# temporarily ignore migration file
+drizzle/
