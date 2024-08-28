@@ -1,0 +1,231 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "ITUgra OpenAPI docs",
+        "version": "1.0.0",
+        "title": "ITUgra"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api",
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Authentication related endpoints"
+        },
+        {
+            "name": "User",
+            "description": "User related endpoints"
+        }
+    ],
+    "schemes": ["http"],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Register a new user",
+                "description": "Creates a new user and returns authentication tokens.",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "user",
+                        "description": "User registration data",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateUserDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Log in an existing user",
+                "description": "Authenticates a user and returns authentication tokens.",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "user",
+                        "description": "User login data",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/LoginUserDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Log out the current user",
+                "description": "Logs out the user and clears authentication tokens.",
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User logged out successfully"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/user/profile": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Get user profile",
+                "description": "Retrieves the profile information of the authenticated user.",
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User profile retrieved successfully",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "uid": {
+                                    "type": "string"
+                                },
+                                "fullName": {
+                                    "type": "string"
+                                },
+                                "mail": {
+                                    "type": "string"
+                                },
+                                "phone": {
+                                    "type": "string"
+                                },
+                                "tag": {
+                                    "type": "string"
+                                },
+                                "role": {
+                                    "type": "string"
+                                },
+                                "birthDate": {
+                                    "type": "string",
+                                    "format": "date"
+                                },
+                                "image": {
+                                    "type": "object",
+                                    "properties": {
+                                        "uid": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "fileUrl": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "api_key": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "ApiResponse": {
+            "type": "object",
+            "properties": {
+                "role": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "uid": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "fileUrl": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "CreateUserDto": {
+            "type": "object",
+            "properties": {
+                "fullName": {
+                    "type": "string"
+                },
+                "mail": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string",
+                    "enum": ["org", "user"]
+                },
+                "birthDate": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": ["fullName", "mail", "role", "birthDate", "password"]
+        },
+        "LoginUserDto": {
+            "type": "object",
+            "properties": {
+                "mail": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": ["password"]
+        }
+    }
+}

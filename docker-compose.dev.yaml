@@ -1,0 +1,58 @@
+version: "3"
+services:
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: 1234
+            POSTGRES_DB: itugra
+        volumes:
+            - ./data:/var/lib/postgresql/data
+        command:
+            ["postgres", "-c", "listen_addresses=*", "-c", "log_statement=all"]
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -q -U postgres"]
+            interval: 5s
+            retries: 5
+            start_period: 10s
+
+    redis:
+        image: "redis:alpine"
+        command: redis-server --requirepass redis_secret
+        ports:
+            - "6379:6379"
+        volumes:
+            - $PWD/redis-data:/var/lib/redis
+            - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+        environment:
+            - REDIS_REPLICATION_MODE=master
+            - REDIS_PASSWORD=redis_secret
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 5s
+            timeout: 3s
+            retries: 3
+
+    express-app:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        depends_on:
+            db:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        ports:
+            - "8000:8000"
+        environment:
+            DATABASE_HOST: db
+            DATABASE_PORT: 5432
+            DATABASE_USER: postgres
+            DATABASE_PASSWORD: 1234
+            DATABASE_NAME: itugra
+            DATABASE_URL: postgresql://postgres:1234@db:5432/itugra
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
+            REDIS_PASSWORD: redis_secret
+        command: sh -c "yarn --ignore-engines && yarn generate && yarn migrate && yarn dev"

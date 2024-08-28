@@ -14,3 +14,8 @@ package-lock.json
 
 # temporarily ignore migration file
 drizzle/
+
+# Data
+data
+redis-data
+redis.conf

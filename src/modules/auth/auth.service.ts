@@ -8,56 +8,76 @@ import { compare } from "bcrypt";
 import { TokenDto } from "./dto/create-token.dto";
 
 export const login = async (userData: LoginUserDto) => {
-    const user = await validateUser(userData);
-    const payload: TokenDto = {
-        role: user.role,
-        uid: user.uid,
-    };
-    const data = { role: user.role, image: user.image };
-    return { ...(await jwtService.createTokenAsync(payload)), data };
+    try {
+        const user = await validateUser(userData);
+        const payload: TokenDto = {
+            role: user.role,
+            uid: user.uid,
+        };
+        const data = { role: user.role, image: user.image };
+        return { ...(await jwtService.createTokenAsync(payload)), data };
+    } catch (error) {
+        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 };
 
 export const register = async (userData: CreateUserDto) => {
-    const user = await userService.createUser(userData);
-    const payload: TokenDto = {
-        role: user.role,
-        uid: user.uid,
-    };
-    const data = { role: user.role, image: user.image };
-    return { ...(await jwtService.createTokenAsync(payload)), data };
+    try {
+        const user = await userService.createUser(userData);
+        const payload: TokenDto = {
+            role: user.role,
+            uid: user.uid,
+        };
+        const data = { role: user.role, image: user.image };
+        return { ...(await jwtService.createTokenAsync(payload)), data };
+    } catch (error) {
+        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 };
 
 export const logout = async (uid: string) => {
-    await jwtService.removeAllTokensByUid(uid);
-    return true;
+    try {
+        await jwtService.removeAllTokensByUid(uid);
+        return true;
+    } catch (error) {
+        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 };
 
 export const refresh = async (refreshToken: string) => {
-    const result = await jwtService.getToken(refreshToken);
-    if (!result) {
-        throw new CustomError(401, "Token is not valid");
+    try {
+        const result = await jwtService.getToken(refreshToken);
+        if (!result) {
+            throw new CustomError(HttpStatus.UNAUTHORIZED);
+        }
+        const [userUid] = result[0].split(":");
+        const user = await userService.getUserByUID(userUid);
+        const tokens = await jwtService.createTokenAsync({
+            uid: userUid,
+            role: user.role,
+        });
+        await jwtService.removeToken(result[0]);
+        return tokens;
+    } catch (error) {
+        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const [userUid] = result[0].split(":");
-    const user = await userService.getUserByUID(userUid);
-    const tokens = await jwtService.createTokenAsync({
-        uid: userUid,
-        role: user.role,
-    });
-    await jwtService.removeToken(result[0]);
-    return tokens;
 };
 
 const validateUser = async (userData: LoginUserDto) => {
-    const user = await userService.getUserByLoginData(userData);
+    try {
+        const user = await userService.getUserByLoginData(userData);
 
-    if (!user) {
-        throw new CustomError(400, "Неправильные почта/телефон или пароль");
-    }
-    const passwordEquals = await compare(userData.password, user.password);
+        if (!user) {
+            throw new CustomError(HttpStatus.BAD_REQUEST);
+        }
+        const passwordEquals = await compare(userData.password, user.password);
 
-    if (user && passwordEquals) {
-        const { password, ...result } = user;
-        return result;
+        if (user && passwordEquals) {
+            const { password, ...result } = user;
+            return result;
+        }
+        throw new CustomError(HttpStatus.BAD_REQUEST);
+    } catch (error) {
+        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    throw new CustomError(400, "Неправильные почта/телефон или пароль");
 };

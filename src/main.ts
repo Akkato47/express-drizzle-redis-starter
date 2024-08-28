@@ -7,6 +7,8 @@ import { logger } from "./lib/loger";
 import { CustomError } from "./utils/custom_error";
 import redisClient from "./db/redis";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json";
 
 const app = express();
 const port = config.app.port;
@@ -15,9 +17,10 @@ app.use(cors(config.cors));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api", router);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((_req: Request, _res: Response, next: NextFunction) => {
-    next(new CustomError(404, "endpoint not found"));
+    next(new CustomError(404, `endpoint ${_req.path} not found`));
 });
 
 app.use(
