@@ -1,7 +1,7 @@
 version: "3"
 services:
     db:
-        image: postgres
+        image: postgres:16
         restart: always
         environment:
             POSTGRES_USER: postgres
@@ -18,7 +18,7 @@ services:
             start_period: 10s
 
     redis:
-        image: "redis:alpine"
+        image: "redis:7-alpine"
         command: redis-server --requirepass redis_secret
         ports:
             - "6379:6379"
