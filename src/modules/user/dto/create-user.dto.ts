@@ -1,11 +1,10 @@
-import { InsertUser } from "@/db/drizzle/schema/user/user.schema";
+import { InsertUser } from "@/db/drizzle/schema/user/schema";
 
 export class CreateUserDto implements InsertUser {
     fullName!: string;
     mail!: string;
     phone!: string | null;
     role!: "org" | "user";
-    birthDate!: string;
     password!: string;
 }
 

@@ -28,7 +28,7 @@ export const users = pgTable(
         password: text("password").notNull(),
         phone: text("phone"),
         role: roleEnum("role").$type<Role>().default(Role.USER).notNull(),
-        birthDate: date("birth_date").notNull(),
+        birthDate: date("birth_date"),
         image: json("image").$type<ImageType>(),
     },
     (table) => {
