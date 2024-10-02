@@ -13,9 +13,13 @@ package-lock.json
 .env
 
 # temporarily ignore migration file
-drizzle/
+
 
 # Data
 data
 redis-data
 redis.conf
+
+# Migrations
+src/db/mikro-orm/migrations
+src/db/drizzle/migrations

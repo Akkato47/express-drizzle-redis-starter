@@ -1,5 +1,4 @@
 import { generateTag } from "@/utils/generate_tag";
-import { ImageType } from "@/utils/types/file.type";
 import {
     boolean,
     date,
@@ -13,6 +12,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { Role } from "./enums/role.enum";
 import { baseSchema } from "../base.schema";
+import { ImageType } from "@/modules/uploads/types/file.type";
 
 export const roleEnum = pgEnum("role", ["ORG", "USER", "ADMIN", "SU"]);
 

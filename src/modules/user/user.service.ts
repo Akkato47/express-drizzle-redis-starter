@@ -1,11 +1,12 @@
 import { eq } from "drizzle-orm";
 
-import { db } from "@/db/postgres/connect";
-import { InsertUser, users } from "@/db/postgres/schema/user/user.schema";
+import { db } from "@/db/drizzle/connect";
+import { users } from "@/db/drizzle/schema/user/schema";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { CustomError } from "@/utils/custom_error";
 import { hash } from "bcrypt";
 import { LoginUserDto } from "../auth/dto/login.dto";
+import { HttpStatus } from "@/utils/enums/http-status";
 
 export const getUserByUID = async (uid: string) => {
     const user = await db.select().from(users).where(eq(users.uid, uid));
@@ -52,6 +53,7 @@ export const createUser = async (createUserDto: CreateUserDto) => {
             .returning();
         return user[0];
     } catch (error) {
+        console.log(error);
         throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 };
@@ -71,14 +73,14 @@ export const getUserProfile = async (userUid: string) => {
             })
             .from(users)
             .where(eq(users.uid, userUid));
-        if (!data) {
+        if (!data[0]) {
             throw new CustomError(
                 HttpStatus.BAD_REQUEST,
                 "Пользователь не найден",
             );
         }
 
-        return data;
+        return data[0];
     } catch (error) {
         throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
     }

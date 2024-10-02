@@ -1,4 +1,4 @@
-import { InsertUser } from "@/db/postgres/schema/user/user.schema";
+import { InsertUser } from "@/db/drizzle/schema/user/user.schema";
 
 export class CreateUserDto implements InsertUser {
     fullName!: string;

@@ -6,6 +6,7 @@ import * as userService from "../user/user.service";
 import { CustomError } from "@/utils/custom_error";
 import { compare } from "bcrypt";
 import { TokenDto } from "./dto/create-token.dto";
+import { HttpStatus } from "@/utils/enums/http-status";
 
 export const login = async (userData: LoginUserDto) => {
     try {

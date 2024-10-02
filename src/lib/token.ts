@@ -52,10 +52,17 @@ function generate({ payload, tokenType }: GenerateOptions): string {
 function verify({ token, tokenType }: VerifyOptions) {
     const { secret } = selectFunc(tokenType);
 
-    return jwt.verify(token, secret, {
-        algorithms: ["HS256"],
-        subject: tokenType,
-    }) as DecodedToken;
+    try {
+        return jwt.verify(token, secret, {
+            algorithms: ["HS256"],
+            subject: tokenType,
+        }) as DecodedToken;
+    } catch (error) {
+        if (tokenType === "access") {
+            return null;
+        }
+        return error;
+    }
 }
 
 export default {

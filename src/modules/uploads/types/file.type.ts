@@ -1,12 +1,12 @@
-export type FileType = {
+export interface FileType {
     uid: string;
     name: string;
     fileUrl: string;
-};
+}
 
-export type ImageType = {
+export interface ImageType {
     uid: string;
     name: string;
     fileUrl: string;
     thumbnailUrl: string;
-};
+}

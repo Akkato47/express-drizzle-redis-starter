@@ -103,48 +103,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User profile retrieved successfully",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "uid": {
-                                    "type": "string"
-                                },
-                                "fullName": {
-                                    "type": "string"
-                                },
-                                "mail": {
-                                    "type": "string"
-                                },
-                                "phone": {
-                                    "type": "string"
-                                },
-                                "tag": {
-                                    "type": "string"
-                                },
-                                "role": {
-                                    "type": "string"
-                                },
-                                "birthDate": {
-                                    "type": "string",
-                                    "format": "date"
-                                },
-                                "image": {
-                                    "type": "object",
-                                    "properties": {
-                                        "uid": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "fileUrl": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "description": "User profile retrieved successfully"
                     },
                     "401": {
                         "description": "Unauthorized"

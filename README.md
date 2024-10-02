@@ -3,16 +3,16 @@
 ## Конфигурационные данные:
 
 ```plaintext
-PORT=8080
+PORT=8000
 NODE_ENV=dev
-CLIENT_BASE_URL=http://localhost:5050
+CLIENT_BASE_URL=http://localhost:5173
 
 DATABASE_HOST=127.0.0.1
 DATABASE_PORT=5432
 DATABASE_USER=postgres
 DATABASE_PASSWORD=1234
-DATABASE_NAME=dbname
-DATABASE_URL=postgresql://postgres:1234@127.0.0.1:5432/dbname
+DATABASE_NAME=starter
+DATABASE_URL=postgresql://postgres:1234@127.0.0.1:5432/starter
 
 JWT_ACCESS_SECRET=secret1
 JWT_REFRESH_SECRET=secret2
