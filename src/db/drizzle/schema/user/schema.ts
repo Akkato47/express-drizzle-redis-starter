@@ -20,7 +20,8 @@ export const users = pgTable(
     "users",
     {
         ...baseSchema,
-        fullName: text("full_name").notNull(),
+        firstName: text("first_name").notNull(),
+        secondName: text("second_name").notNull(),
         tag: text("tag")
             .$defaultFn(() => generateTag())
             .notNull(),

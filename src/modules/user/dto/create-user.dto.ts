@@ -1,7 +1,8 @@
 import { InsertUser } from "@/db/drizzle/schema/user/schema";
 
 export class CreateUserDto implements InsertUser {
-    fullName!: string;
+    firstName: string;
+    secondName: string;
     mail!: string;
     phone!: string | null;
     role!: "org" | "user";
@@ -9,7 +10,8 @@ export class CreateUserDto implements InsertUser {
 }
 
 export class UpdateUserDto implements Partial<InsertUser> {
-    fullName?: string;
+    firstName?: string;
+    secondName?: string;
     mail?: string;
     phone?: string | null;
     role?: "org" | "user" | "admin" | "su";

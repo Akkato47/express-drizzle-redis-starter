@@ -148,7 +148,10 @@
         "CreateUserDto": {
             "type": "object",
             "properties": {
-                "fullName": {
+                "firstName": {
+                    "type": "string"
+                },
+                "secondName": {
                     "type": "string"
                 },
                 "mail": {
@@ -160,10 +163,6 @@
                 "role": {
                     "type": "string",
                     "enum": ["org", "user"]
-                },
-                "birthDate": {
-                    "type": "string",
-                    "format": "date"
                 },
                 "password": {
                     "type": "string"
