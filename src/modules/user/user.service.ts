@@ -63,7 +63,8 @@ export const getUserProfile = async (userUid: string) => {
         const data = await db
             .select({
                 uid: users.uid,
-                fullName: users.fullName,
+                firstName: users.firstName,
+                secondName: users.secondName,
                 mail: users.mail,
                 phone: users.phone,
                 tag: users.tag,
