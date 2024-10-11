@@ -1,4 +1,4 @@
-# Created for personal usage!
+# Moretech backend
 
 ## Конфигурационные данные:
 
