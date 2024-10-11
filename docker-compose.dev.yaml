@@ -6,7 +6,7 @@ services:
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: 1234
-            POSTGRES_DB: starter
+            POSTGRES_DB: moretech
         volumes:
             - ./data:/var/lib/postgresql/data
         command:
@@ -50,8 +50,8 @@ services:
             DATABASE_PORT: 5432
             DATABASE_USER: postgres
             DATABASE_PASSWORD: 1234
-            DATABASE_NAME: starter
-            DATABASE_URL: postgresql://postgres:1234@db:5432/starter
+            DATABASE_NAME: moretech
+            DATABASE_URL: postgresql://postgres:1234@db:5432/moretech
             REDIS_HOST: redis
             REDIS_PORT: 6379
             REDIS_PASSWORD: redis_secret
