@@ -9,8 +9,15 @@ import { LoginUserDto } from "../auth/dto/login.dto";
 import { HttpStatus } from "@/utils/enums/http-status";
 
 export const getUserByUID = async (uid: string) => {
-    const user = await db.select().from(users).where(eq(users.uid, uid));
-    return user[0];
+    try {
+        const user = await db.select().from(users).where(eq(users.uid, uid));
+        return user[0];
+    } catch (error) {
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
+    }
 };
 
 export const getUserByLoginData = async (loginData: LoginUserDto) => {
@@ -30,7 +37,10 @@ export const getUserByLoginData = async (loginData: LoginUserDto) => {
         }
         throw new CustomError(HttpStatus.BAD_REQUEST);
     } catch (error) {
-        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
     }
 };
 
@@ -53,8 +63,10 @@ export const createUser = async (createUserDto: CreateUserDto) => {
             .returning();
         return user[0];
     } catch (error) {
-        console.log(error);
-        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
     }
 };
 
@@ -83,6 +95,9 @@ export const getUserProfile = async (userUid: string) => {
 
         return data[0];
     } catch (error) {
-        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
     }
 };
