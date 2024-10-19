@@ -18,7 +18,10 @@ export const login = async (userData: LoginUserDto) => {
         const data = { role: user.role, image: user.image };
         return { ...(await jwtService.createTokenAsync(payload)), data };
     } catch (error) {
-        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
     }
 };
 
@@ -32,7 +35,10 @@ export const register = async (userData: CreateUserDto) => {
         const data = { role: user.role, image: user.image };
         return { ...(await jwtService.createTokenAsync(payload)), data };
     } catch (error) {
-        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
     }
 };
 
@@ -41,7 +47,10 @@ export const logout = async (uid: string) => {
         await jwtService.removeAllTokensByUid(uid);
         return true;
     } catch (error) {
-        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
     }
 };
 
@@ -60,7 +69,10 @@ export const refresh = async (refreshToken: string) => {
         await jwtService.removeToken(result[0]);
         return tokens;
     } catch (error) {
-        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
     }
 };
 
@@ -79,6 +91,9 @@ const validateUser = async (userData: LoginUserDto) => {
         }
         throw new CustomError(HttpStatus.BAD_REQUEST);
     } catch (error) {
-        throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
     }
 };
