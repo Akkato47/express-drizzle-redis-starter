@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 
 import { db } from "@/db/drizzle/connect";
 import { users } from "@/db/drizzle/schema/user/schema";
@@ -15,20 +15,19 @@ export const getUserByUID = async (uid: string) => {
 
 export const getUserByLoginData = async (loginData: LoginUserDto) => {
     try {
-        if (loginData.mail) {
-            const user = await db
-                .select()
-                .from(users)
-                .where(eq(users.mail, loginData.mail));
-            return user[0];
-        } else if (loginData.phone) {
-            const user = await db
-                .select()
-                .from(users)
-                .where(eq(users.phone, loginData.phone));
-            return user[0];
+        if (!loginData) {
+            throw new CustomError(HttpStatus.BAD_REQUEST);
         }
-        throw new CustomError(HttpStatus.BAD_REQUEST);
+        const user = await db
+            .select()
+            .from(users)
+            .where(
+                or(
+                    eq(users.mail, loginData.mail),
+                    eq(users.phone, loginData.phone),
+                ),
+            );
+        return user[0];
     } catch (error) {
         throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
     }
