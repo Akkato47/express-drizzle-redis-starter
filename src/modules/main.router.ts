@@ -8,6 +8,6 @@ const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/user", userRouter);
-router.use("uploads", uploadRouter);
+router.use("/uploads", uploadRouter);
 
 export default router;
