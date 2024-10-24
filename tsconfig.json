@@ -105,10 +105,6 @@
         // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
         "skipLibCheck": true /* Skip type checking all .d.ts files. */
     },
-    "include": [
-        "src",
-        "src/db/mikro-orm/mikro-orm.config.ts",
-        "src/db/drizzle/drizzle.config.ts"
-    ],
+    "include": ["src", "src/db/drizzle/drizzle.config.ts"],
     "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }

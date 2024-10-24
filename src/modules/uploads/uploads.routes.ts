@@ -1,6 +1,6 @@
 import { isAuthenticated } from "@/middleware/auth.middleware";
 import { Router } from "express";
-import * as uploadController from "./upload.controller";
+import * as uploadController from "./uploads.controller";
 import multer from "multer";
 
 const uploadMiddleware = multer({

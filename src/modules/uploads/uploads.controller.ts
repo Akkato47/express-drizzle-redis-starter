@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import * as uploadService from "./upload.service";
+import * as uploadService from "./uploads.service";
 
 export async function uploadFile(
     req: Request,
