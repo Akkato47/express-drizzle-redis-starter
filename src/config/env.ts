@@ -29,6 +29,8 @@ const envSchema = z.object({
     MAIL_PASSWORD: z.string(),
     MAIL_FROM: z.string(),
     MAIL_PORT: z.string(),
+    YANDEX_CLIENT_ID: z.string(),
+    YANDEX_CLIENT_SECRET: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

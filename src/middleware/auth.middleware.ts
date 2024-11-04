@@ -44,11 +44,11 @@ export async function isAuthenticated(
         });
 
         // Устанавливаем новые токены в куки
-        res.cookie("itugra-access-token", refreshedTokens.token, {
+        res.cookie("starter-access-token", refreshedTokens.token, {
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 день
             httpOnly: true,
         });
-        res.cookie("itugra-refresh-token", refreshedTokens.refresh, {
+        res.cookie("starter-refresh-token", refreshedTokens.refresh, {
             expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 день
             httpOnly: true,
         });
@@ -60,11 +60,11 @@ export async function isAuthenticated(
     }
 }
 function extractTokenFromCookie(request: Request): string | undefined {
-    const token = request.cookies["itugra-access-token"];
+    const token = request.cookies["starter-access-token"];
     return token ? token : undefined;
 }
 
 function extractRefreshTokenFromCookie(request: Request): string | undefined {
-    const token = request.cookies["itugra-refresh-token"];
+    const token = request.cookies["starter-refresh-token"];
     return token ? token : undefined;
 }

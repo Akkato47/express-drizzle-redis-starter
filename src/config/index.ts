@@ -58,4 +58,8 @@ export default {
         from: env.MAIL_FROM,
         port: env.MAIL_PORT,
     },
+    yandexApi: {
+        clientID: env.YANDEX_CLIENT_ID,
+        clientSecret: env.YANDEX_CLIENT_SECRET,
+    },
 } as const;

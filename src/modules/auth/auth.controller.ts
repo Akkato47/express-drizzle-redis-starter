@@ -11,15 +11,13 @@ export async function register(
     try {
         const data = await authService.register(req.body);
 
-        res.cookie("itugra-access-token", data.token, {
+        res.cookie("starter-access-token", data.token, {
             expires: new Date(new Date().getTime() + 5 * 60 * 1000),
-
             httpOnly: true,
         });
 
-        res.cookie("itugra-refresh-token", data.refresh, {
+        res.cookie("starter-refresh-token", data.refresh, {
             expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
-
             httpOnly: true,
         });
 
@@ -37,15 +35,13 @@ export async function login(
     try {
         const data = await authService.login(req.body);
 
-        res.cookie("itugra-access-token", data.token, {
+        res.cookie("starter-access-token", data.token, {
             expires: new Date(new Date().getTime() + 5 * 60 * 1000),
-
             httpOnly: true,
         });
 
-        res.cookie("itugra-refresh-token", data.refresh, {
+        res.cookie("starter-refresh-token", data.refresh, {
             expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
-
             httpOnly: true,
         });
 
@@ -57,11 +53,11 @@ export async function login(
 
 export async function logout(req: Request, res: Response, next: NextFunction) {
     try {
-        res.cookie("itugra-access-token", "", {
+        res.cookie("starter-access-token", "", {
             expires: new Date(0),
             httpOnly: true,
         });
-        res.cookie("itugra-refresh-token", "", {
+        res.cookie("starter-refresh-token", "", {
             expires: new Date(0),
             httpOnly: true,
         });
@@ -73,6 +69,30 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
         await authService.logout(req.user.uid);
 
         return res.status(200).json({ message: "ok" });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function oAuth(
+    req: Request<{}, {}, { code: string }>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const data = await authService.oAuth(req.body.code);
+
+        res.cookie("starter-access-token", data.token, {
+            expires: new Date(new Date().getTime() + 5 * 60 * 1000),
+            httpOnly: true,
+        });
+
+        res.cookie("starter-refresh-token", data.refresh, {
+            expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
+            httpOnly: true,
+        });
+
+        return res.send(data.data).status(200);
     } catch (error) {
         next(error);
     }

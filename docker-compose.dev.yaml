@@ -23,8 +23,8 @@ services:
         ports:
             - "6379:6379"
         volumes:
-            - $PWD/redis-data:/var/lib/redis
-            - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+            - ./redis-data:$PWD/redis-data:/var/lib/redis
+            - ./redis.conf:a+$PWD/redis.conf:/usr/local/etc/redis/redis.conf
         environment:
             - REDIS_REPLICATION_MODE=master
             - REDIS_PASSWORD=redis_secret

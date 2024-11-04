@@ -20,7 +20,8 @@ export const users = pgTable(
     "users",
     {
         ...baseSchema,
-        firstName: text("first_name").notNull(),
+        yandexId: varchar("yandex_id", { length: 16 }),
+        firstName: text("first_name").unique().notNull(),
         secondName: text("second_name").notNull(),
         tag: text("tag")
             .$defaultFn(() => generateTag())

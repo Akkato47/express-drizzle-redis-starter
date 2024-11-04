@@ -20,6 +20,21 @@ export const getUserByUID = async (uid: string) => {
     }
 };
 
+export const getUserByYID = async (yid: string) => {
+    try {
+        const user = await db
+            .select()
+            .from(users)
+            .where(eq(users.yandexId, yid));
+        return user[0];
+    } catch (error) {
+        if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+            throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        throw error;
+    }
+};
+
 export const getUserByLoginData = async (loginData: LoginUserDto) => {
     try {
         if (!loginData) {
@@ -60,6 +75,9 @@ export const createUser = async (createUserDto: CreateUserDto) => {
             .insert(users)
             .values({ ...createUserDto, password: hashPassword })
             .returning();
+        // if (createUserDto.password) {
+        //     await db.update(users).set({ password: createUserDto.password });
+        // }
         return user[0];
     } catch (error) {
         if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {

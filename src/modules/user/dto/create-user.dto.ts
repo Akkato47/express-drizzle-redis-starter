@@ -5,8 +5,9 @@ export class CreateUserDto implements InsertUser {
     secondName: string;
     mail!: string;
     phone!: string | null;
-    role!: "org" | "user";
+    role!: "ORG" | "USER";
     password!: string;
+    yandexId: string | null;
 }
 
 export class UpdateUserDto implements Partial<InsertUser> {
@@ -14,7 +15,7 @@ export class UpdateUserDto implements Partial<InsertUser> {
     secondName?: string;
     mail?: string;
     phone?: string | null;
-    role?: "org" | "user" | "admin" | "su";
+    role?: "ORG" | "USER" | "ADMIN" | "SU";
     birthDate?: string;
     password?: string;
 }
