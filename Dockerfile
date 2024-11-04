@@ -19,7 +19,7 @@ WORKDIR /usr/src/app
 ENV NODE_ENV=production
 ENV PORT=8080
 
-COPY package.json yarn.lock ./
+COPY package.json ./
 
 RUN yarn install --production
 
