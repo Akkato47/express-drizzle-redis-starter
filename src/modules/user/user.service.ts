@@ -1,12 +1,12 @@
-import { eq, or } from "drizzle-orm";
+import { eq, or } from 'drizzle-orm';
 
-import { db } from "@/db/drizzle/connect";
-import { users } from "@/db/drizzle/schema/user/schema";
-import type { CreateUserDto } from "./dto/create-user.dto";
-import { CustomError } from "@/utils/custom_error";
-import { hash } from "bcrypt";
-import type { LoginUserDto } from "../auth/dto/login.dto";
-import { HttpStatus } from "@/utils/enums/http-status";
+import { db } from '@/db/drizzle/connect';
+import { users } from '@/db/drizzle/schema/user/schema';
+import type { CreateUserDto } from './dto/create-user.dto';
+import { CustomError } from '@/utils/custom_error';
+import { hash } from 'bcrypt';
+import type { LoginUserDto } from '../auth/dto/login.dto';
+import { HttpStatus } from '@/utils/enums/http-status';
 
 export const getUserByUID = async (uid: string) => {
     try {
@@ -46,8 +46,8 @@ export const getUserByLoginData = async (loginData: LoginUserDto) => {
             .where(
                 or(
                     eq(users.mail, loginData.mail),
-                    eq(users.phone, loginData.phone),
-                ),
+                    eq(users.phone, loginData.phone)
+                )
             );
         return user[0];
     } catch (error) {
@@ -106,7 +106,7 @@ export const getUserProfile = async (userUid: string) => {
         if (!data[0]) {
             throw new CustomError(
                 HttpStatus.BAD_REQUEST,
-                "Пользователь не найден",
+                'Пользователь не найден'
             );
         }
 

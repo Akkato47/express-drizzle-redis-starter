@@ -1,4 +1,5 @@
 import config from "@/config";
+import { logger } from "@/lib/loger";
 import * as Redis from "redis";
 
 const redisClient: Redis.RedisClientType = Redis.createClient({
@@ -9,6 +10,6 @@ const redisClient: Redis.RedisClientType = Redis.createClient({
     },
 });
 
-redisClient.on("error", (err) => console.log("Redis Client Error: ", err));
+redisClient.on("error", (err) => logger.error(`Redis Client Error: ${err}`));
 
 export default redisClient;

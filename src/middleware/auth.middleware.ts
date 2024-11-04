@@ -1,7 +1,9 @@
 import { CustomError } from "@/utils/custom_error";
 import { Request, Response, NextFunction } from "express";
-import token from "@/lib/token";
+import token from "@/modules/auth/lib/token";
 import { refresh } from "@/modules/auth/auth.service";
+import { extractAccessTokenFromCookie } from "./lib/extractAccessTokenFromCookie";
+import { extractRefreshTokenFromCookie } from "./lib/extractRefreshTokenFromCookie";
 
 export async function isAuthenticated(
     req: Request,
@@ -9,7 +11,7 @@ export async function isAuthenticated(
     next: NextFunction,
 ) {
     try {
-        const extractedToken = extractTokenFromCookie(req);
+        const extractedToken = extractAccessTokenFromCookie(req);
         let user;
 
         if (extractedToken) {
@@ -53,13 +55,4 @@ export async function isAuthenticated(
     } catch (error) {
         next(new CustomError(401, "Unauthorized"));
     }
-}
-function extractTokenFromCookie(request: Request): string | undefined {
-    const token = request.cookies["starter-access-token"];
-    return token ? token : undefined;
-}
-
-function extractRefreshTokenFromCookie(request: Request): string | undefined {
-    const token = request.cookies["starter-refresh-token"];
-    return token ? token : undefined;
 }

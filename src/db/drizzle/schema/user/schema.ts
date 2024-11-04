@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { Role } from "./enums/role.enum";
 import { baseSchema } from "../base.schema";
-import type { ImageType } from "@/modules/uploads/types/file.type";
+import type { ImageType } from "@/modules/uploads/types/file.interface";
 
 export const roleEnum = pgEnum("role", ["ORG", "USER", "ADMIN", "SU"]);
 

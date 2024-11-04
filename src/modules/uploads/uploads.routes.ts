@@ -1,7 +1,7 @@
-import { isAuthenticated } from "@/middleware/auth.middleware";
-import { Router } from "express";
-import * as uploadController from "./uploads.controller";
-import multer from "multer";
+import { isAuthenticated } from '@/middleware/auth.middleware';
+import { Router } from 'express';
+import * as uploadController from './uploads.controller';
+import multer from 'multer';
 
 const uploadMiddleware = multer({
     storage: multer.memoryStorage(),
@@ -10,10 +10,10 @@ const uploadMiddleware = multer({
 const router = Router();
 
 router.post(
-    "/file",
-    uploadMiddleware.single("file"),
+    '/file',
+    uploadMiddleware.single('file'),
     isAuthenticated,
-    uploadController.uploadFile,
+    uploadController.uploadFile
 );
 
 export default router;

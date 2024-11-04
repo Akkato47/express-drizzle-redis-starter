@@ -1,7 +1,7 @@
-import { CorsOptions } from "cors";
-import { env } from "./env";
+import { CorsOptions } from 'cors';
+import { env } from './env';
 
-const isProduction = env.NODE_ENV === "prod";
+const isProduction = env.NODE_ENV === 'prod';
 
 export default {
     app: {
@@ -10,8 +10,8 @@ export default {
     },
     cors: {
         origin: [
-            "http://localhost:8080",
-            "http://127.0.0.1:8080",
+            'http://localhost:8080',
+            'http://127.0.0.1:8080',
             env.CLIENT_BASE_URL,
         ],
         credentials: true,
@@ -34,15 +34,15 @@ export default {
     jwt: {
         access: {
             secret: env.JWT_ACCESS_SECRET,
-            expiresIn: isProduction ? env.ACCESS_TOKEN_EXPIRES_IN : "5m",
+            expiresIn: isProduction ? env.ACCESS_TOKEN_EXPIRES_IN : '5m',
         },
         refresh: {
             secret: env.JWT_REFRESH_SECRET,
-            expiresIn: isProduction ? env.REFRESH_TOKEN_EXPIRES_IN : "12h",
+            expiresIn: isProduction ? env.REFRESH_TOKEN_EXPIRES_IN : '12h',
         },
         passwordReset: {
             secret: env.JWT_PASSWORD_RESET_SECRET,
-            expiresIn: "1d",
+            expiresIn: '1d',
         },
     },
     bucket: {

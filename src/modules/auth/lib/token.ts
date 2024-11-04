@@ -1,26 +1,19 @@
 import jwt from "jsonwebtoken";
 
 import config from "@/config";
+import type { TDecodedToken } from "../types/decodedToken.interface";
 
-type GenerateOptions = {
+type TGenerateOptions = {
     payload: string | object | Buffer;
     tokenType: "access" | "refresh" | "passwordReset";
 };
 
-type VerifyOptions = {
+type TVerifyOptions = {
     token: string;
-    tokenType: GenerateOptions["tokenType"];
+    tokenType: TGenerateOptions["tokenType"];
 };
 
-export type DecodedToken = {
-    uid: string;
-    role: string;
-    iat: number;
-    exp: number;
-    subject: string;
-};
-
-function selectFunc(tokenType: GenerateOptions["tokenType"]) {
+function selectFunc(tokenType: TGenerateOptions["tokenType"]) {
     if (tokenType === "refresh") {
         return {
             secret: config.jwt.refresh.secret,
@@ -39,7 +32,7 @@ function selectFunc(tokenType: GenerateOptions["tokenType"]) {
     };
 }
 
-function generate({ payload, tokenType }: GenerateOptions): string {
+function generate({ payload, tokenType }: TGenerateOptions): string {
     const { expiresIn, secret } = selectFunc(tokenType);
 
     return jwt.sign(payload, secret, {
@@ -49,14 +42,14 @@ function generate({ payload, tokenType }: GenerateOptions): string {
     });
 }
 
-function verify({ token, tokenType }: VerifyOptions) {
+function verify({ token, tokenType }: TVerifyOptions) {
     const { secret } = selectFunc(tokenType);
 
     try {
         return jwt.verify(token, secret, {
             algorithms: ["HS256"],
             subject: tokenType,
-        }) as DecodedToken;
+        }) as TDecodedToken;
     } catch (error) {
         if (tokenType === "access") {
             return null;

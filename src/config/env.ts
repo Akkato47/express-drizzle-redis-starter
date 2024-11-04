@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import "dotenv/config";
+import 'dotenv/config';
 
 const envSchema = z.object({
     PORT: z.string().optional(),
@@ -11,7 +11,7 @@ const envSchema = z.object({
     DATABASE_USER: z.string(),
     DATABASE_PASSWORD: z.string(),
     DATABASE_NAME: z.string(),
-    DATABASE_URL: z.string().startsWith("postgresql://"),
+    DATABASE_URL: z.string().startsWith('postgresql://'),
     JWT_ACCESS_SECRET: z.string(),
     JWT_REFRESH_SECRET: z.string(),
     JWT_PASSWORD_RESET_SECRET: z.string(),
@@ -20,17 +20,17 @@ const envSchema = z.object({
     REDIS_HOST: z.string(),
     REDIS_PORT: z.string(),
     REDIS_PASSWORD: z.string(),
-    BUCKET_KEY: z.string(),
-    BUCKET_SECRET: z.string(),
-    BUCKET_ENDPOINT: z.string(),
-    BUCKET_NAME: z.string(),
-    MAIL_HOST: z.string(),
-    MAIL_USER: z.string(),
-    MAIL_PASSWORD: z.string(),
-    MAIL_FROM: z.string(),
-    MAIL_PORT: z.string(),
-    YANDEX_CLIENT_ID: z.string(),
-    YANDEX_CLIENT_SECRET: z.string(),
+    BUCKET_KEY: z.string().nullable(),
+    BUCKET_SECRET: z.string().nullable(),
+    BUCKET_ENDPOINT: z.string().nullable(),
+    BUCKET_NAME: z.string().nullable(),
+    MAIL_HOST: z.string().nullable(),
+    MAIL_USER: z.string().nullable(),
+    MAIL_PASSWORD: z.string().nullable(),
+    MAIL_FROM: z.string().nullable(),
+    MAIL_PORT: z.string().nullable(),
+    YANDEX_CLIENT_ID: z.string().nullable(),
+    YANDEX_CLIENT_SECRET: z.string().nullable(),
 });
 
 export const env = envSchema.parse(process.env);
