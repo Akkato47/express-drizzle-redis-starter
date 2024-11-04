@@ -4,9 +4,9 @@ services:
         image: postgres:16
         restart: always
         environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: 1234
-            POSTGRES_DB: starter
+            POSTGRES_USER: ${DATABASE_USER}
+            POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+            POSTGRES_DB: ${DATABASE_NAME}
         volumes:
             - ./data:/var/lib/postgresql/data
         command:
@@ -23,11 +23,11 @@ services:
         ports:
             - "6379:6379"
         volumes:
-            - ./redis-data:$PWD/redis-data:/var/lib/redis
-            - ./redis.conf:a+$PWD/redis.conf:/usr/local/etc/redis/redis.conf
+            - ./redis-data:/var/lib/redis
+            - ./redis.conf:/usr/local/etc/redis/redis.conf
         environment:
             - REDIS_REPLICATION_MODE=master
-            - REDIS_PASSWORD=redis_secret
+            - REDIS_PASSWORD=${REDIS_PASSWORD}
         healthcheck:
             test: ["CMD", "redis-cli", "ping"]
             interval: 5s
@@ -47,11 +47,11 @@ services:
             - "8000:8000"
         environment:
             DATABASE_HOST: db
-            DATABASE_PORT: 5432
-            DATABASE_USER: postgres
-            DATABASE_PASSWORD: 1234
-            DATABASE_NAME: starter
-            DATABASE_URL: postgresql://postgres:1234@db:5432/starter
+            DATABASE_PORT: ${DATABASE_PORT}
+            DATABASE_USER: ${DATABASE_USER}
+            DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+            DATABASE_NAME: ${DATABASE_NAME}
+            DATABASE_URL: postgresql://postgres:${DATABASE_PASSWORD}@db:${DATABASE_PORT}/${DATABASE_NAME}
             REDIS_HOST: redis
             REDIS_PORT: 6379
             REDIS_PASSWORD: redis_secret
