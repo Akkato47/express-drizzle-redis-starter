@@ -2,10 +2,10 @@ import { eq, or } from "drizzle-orm";
 
 import { db } from "@/db/drizzle/connect";
 import { users } from "@/db/drizzle/schema/user/schema";
-import { CreateUserDto } from "./dto/create-user.dto";
+import type { CreateUserDto } from "./dto/create-user.dto";
 import { CustomError } from "@/utils/custom_error";
 import { hash } from "bcrypt";
-import { LoginUserDto } from "../auth/dto/login.dto";
+import type { LoginUserDto } from "../auth/dto/login.dto";
 import { HttpStatus } from "@/utils/enums/http-status";
 
 export const getUserByUID = async (uid: string) => {
@@ -75,6 +75,7 @@ export const createUser = async (createUserDto: CreateUserDto) => {
             .insert(users)
             .values({ ...createUserDto, password: hashPassword })
             .returning();
+        // FIXME Waiting for solving issue https://github.com/drizzle-team/drizzle-orm/issues/2694
         // if (createUserDto.password) {
         //     await db.update(users).set({ password: createUserDto.password });
         // }
@@ -96,7 +97,6 @@ export const getUserProfile = async (userUid: string) => {
                 secondName: users.secondName,
                 mail: users.mail,
                 phone: users.phone,
-                tag: users.tag,
                 birthDate: users.birthDate,
                 image: users.image,
                 role: users.role,

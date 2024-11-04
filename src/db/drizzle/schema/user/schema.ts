@@ -1,6 +1,4 @@
-import { generateTag } from "@/utils/generate_tag";
 import {
-    boolean,
     date,
     json,
     pgEnum,
@@ -12,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { Role } from "./enums/role.enum";
 import { baseSchema } from "../base.schema";
-import { ImageType } from "@/modules/uploads/types/file.type";
+import type { ImageType } from "@/modules/uploads/types/file.type";
 
 export const roleEnum = pgEnum("role", ["ORG", "USER", "ADMIN", "SU"]);
 
@@ -20,12 +18,9 @@ export const users = pgTable(
     "users",
     {
         ...baseSchema,
-        yandexId: varchar("yandex_id", { length: 16 }),
-        firstName: text("first_name").unique().notNull(),
+        yandexId: varchar("yandex_id", { length: 16 }).unique(),
+        firstName: text("first_name").notNull(),
         secondName: text("second_name").notNull(),
-        tag: text("tag")
-            .$defaultFn(() => generateTag())
-            .notNull(),
         mail: text("email").notNull().unique(),
         password: text("password").notNull(),
         phone: text("phone"),
@@ -35,7 +30,6 @@ export const users = pgTable(
     },
     (table) => {
         return {
-            usersTagUnique: unique("users_tag_unique").on(table.tag),
             usersMailUnique: unique("users_mail_unique").on(table.mail),
             usersPhoneUnique: unique("users_phone_unique").on(table.phone),
         };

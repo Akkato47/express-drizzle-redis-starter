@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 import * as jwt from "jsonwebtoken";
-import { TokenDto } from "./dto/create-token.dto";
+import type { TokenDto } from "./dto/create-token.dto";
 import config from "@/config";
 import redisClient from "@/db/redis";
 
