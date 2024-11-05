@@ -61,7 +61,7 @@ export default {
   yandexApi: {
     clientID: env.YANDEX_CLIENT_ID,
     clientSecret: env.YANDEX_CLIENT_SECRET,
-    tokenUrl: env.YANDEX_TOKEN_URL,
+    tokenUrl: env.YANDEX_BASE_URL,
     loginUrl: env.YANDEX_LOGIN_URL,
   },
 } as const;

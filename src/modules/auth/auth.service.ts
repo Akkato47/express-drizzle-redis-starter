@@ -20,6 +20,7 @@ export const login = async (userData: LoginUserDto) => {
     const payload: TokenDto = {
       role: user.role,
       uid: user.uid,
+      oAuthId: user.oAuthId ? user.oAuthId : '',
     };
     const data = { role: user.role, image: user.image };
     return { ...(await jwtService.createTokenAsync(payload)), data };
@@ -37,6 +38,7 @@ export const register = async (userData: CreateUserDto) => {
     const payload: TokenDto = {
       role: user.role,
       uid: user.uid,
+      oAuthId: userData.oAuthId ? userData.oAuthId : '',
     };
     const data = { role: user.role, image: user.image };
     return { ...(await jwtService.createTokenAsync(payload)), data };
@@ -48,11 +50,34 @@ export const register = async (userData: CreateUserDto) => {
   }
 };
 
-export const logout = async (uid: string) => {
+export const logout = async (uid: string, oAuthId?: string) => {
   try {
     await jwtService.removeAllTokensByUid(uid);
+    if (oAuthId) {
+      const result = await jwtService.getTokenOAuthId(oAuthId);
+      if (!result) {
+        throw new CustomError(HttpStatus.UNAUTHORIZED);
+      }
+
+      const [oAuth, token] = result.res[0].split(':');
+      await jwtService.removeAllTokensByOAuthId(oAuthId);
+      await axios.post<IOAuthTokenResponse>(
+        `${config[result.value].tokenUrl}/revoke_token`,
+        {
+          access_token: token,
+          client_id: config[result.value].clientID,
+          client_secret: config[result.value].clientSecret,
+        },
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+    }
     return true;
   } catch (error) {
+    console.log(error);
     if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
       throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -107,7 +132,7 @@ const validateUser = async (userData: LoginUserDto) => {
 export const oAuth = async (code: string, type: OAuthEnum) => {
   try {
     const tokens = await axios.post<IOAuthTokenResponse>(
-      config[type].tokenUrl,
+      `${config[type].tokenUrl}/token`,
       {
         grant_type: 'authorization_code',
         code: code,
@@ -131,6 +156,13 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
         },
       }
     );
+    await jwtService.removeAllTokensByOAuthId(userData.data.id);
+    await jwtService.storeOAuthToken({
+      oAuthId: userData.data.id,
+      token: tokens.data.access_token,
+      type,
+    });
+
     const tryFindUser = await userService.getUserByOAuthId(userData.data.id);
     // TODO: Change when the bug solved https://github.com/drizzle-team/drizzle-orm/issues/2694
     if (!tryFindUser) {
@@ -148,10 +180,12 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
     const payload: TokenDto = {
       role: tryFindUser.role,
       uid: tryFindUser.uid,
+      oAuthId: userData.data.id,
     };
     const data = { role: tryFindUser.role, image: tryFindUser.image };
     return { ...(await jwtService.createTokenAsync(payload)), data };
   } catch (error) {
+    console.log(error);
     if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
       throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -67,7 +67,7 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
       return res.status(500).json({ message: 'Something went wrong' });
     }
 
-    await authService.logout(req.user.uid);
+    await authService.logout(req.user.uid, req.user?.oAuthId);
 
     return res.status(200).json({ message: 'ok' });
   } catch (error) {

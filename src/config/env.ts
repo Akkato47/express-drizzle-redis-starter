@@ -31,7 +31,7 @@ const envSchema = z.object({
   MAIL_PORT: z.string().nullable(),
   YANDEX_CLIENT_ID: z.string().nullable(),
   YANDEX_CLIENT_SECRET: z.string().nullable(),
-  YANDEX_TOKEN_URL: z.string().nullable(),
+  YANDEX_BASE_URL: z.string().nullable(),
   YANDEX_LOGIN_URL: z.string().nullable(),
 });
 
