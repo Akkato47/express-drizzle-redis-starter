@@ -1,8 +1,8 @@
-import { Request } from "express";
+import { Request } from 'express';
 
 export const extractAccessTokenFromCookie = (
-    request: Request,
+  request: Request
 ): string | undefined => {
-    const token = request.cookies["starter-access-token"];
-    return token ? token : undefined;
+  const token = request.cookies['starter-access-token'];
+  return token ? token : undefined;
 };

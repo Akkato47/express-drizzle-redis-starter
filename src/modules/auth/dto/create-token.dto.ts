@@ -1,4 +1,4 @@
 export class TokenDto {
-    uid!: string;
-    role!: string;
+  uid!: string;
+  role!: string;
 }

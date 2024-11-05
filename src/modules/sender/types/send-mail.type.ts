@@ -1,4 +1,4 @@
 export interface SendOptions {
-    to: string;
-    subject: string;
+  to: string;
+  subject: string;
 }

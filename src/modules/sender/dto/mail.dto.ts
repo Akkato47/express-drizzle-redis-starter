@@ -1,3 +1,3 @@
 export class MailDto {
-    code?: string;
+  code?: string;
 }
