@@ -34,6 +34,9 @@ Implemented features in the project:
 - [x] S3 uploads.
 - [x] OAuth2.0 authorization via Yandex.
 - [ ] OAuth2.0 authorization via VK.
+- [ ] ELK.
+- [ ] Prometheus and Grafana.
+- [ ] RabbitMQ/Kafka.
 
 ## 🛠 Technologies
 
