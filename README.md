@@ -5,8 +5,8 @@
 ## 📋 Contents
 
 - [About the Project](#-about-the-project)
-- [Technologies](#-technologies)
 - [Checklist](#-checklist)
+- [Technologies](#-technologies)
 - [Installation](#-installation)
 - [Environment Setup](#-environment-setup)
 - [Running the Application](#️-running-the-application)
