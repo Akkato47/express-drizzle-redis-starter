@@ -30,6 +30,6 @@ RUN adduser -S user99 -u 1001
 RUN chown -R user99:nodejs /usr/src/app
 USER user99
 
-EXPOSE 8080
+EXPOSE 8000
 
 CMD [ "node", "/usr/src/app/main.js" ]
