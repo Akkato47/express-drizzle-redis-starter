@@ -13,6 +13,7 @@ import {
   IOAuthTokenResponse,
 } from './types/oauth.interface';
 import { OAuthEnum } from './enums/oauth.enum';
+import { RoleEnum } from '@/db/drizzle/schema/user/enums/role.enum';
 
 export const login = async (userData: LoginUserDto) => {
   try {
@@ -111,7 +112,7 @@ const validateUser = async (userData: LoginUserDto) => {
   try {
     const user = await userService.getUserByLoginData(userData);
 
-    if (!user) {
+    if (!user || user.password == null) {
       throw new CustomError(HttpStatus.BAD_REQUEST);
     }
     const passwordEquals = await compare(userData.password, user.password);
@@ -164,7 +165,6 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
     });
 
     const tryFindUser = await userService.getUserByOAuthId(userData.data.id);
-    // TODO: Change when the bug solved https://github.com/drizzle-team/drizzle-orm/issues/2694
     if (!tryFindUser) {
       const data = await register({
         oAuthId: userData.data.id,
@@ -172,8 +172,7 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
         secondName: userData.data.last_name,
         mail: userData.data.default_email,
         phone: userData.data.default_phone.number,
-        role: 'USER',
-        password: 'tempNeedtochange12139=09[o-9ko[p',
+        role: RoleEnum.USER,
       });
       return data;
     }
@@ -185,10 +184,6 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
     const data = { role: tryFindUser.role, image: tryFindUser.image };
     return { ...(await jwtService.createTokenAsync(payload)), data };
   } catch (error) {
-    console.log(error);
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };

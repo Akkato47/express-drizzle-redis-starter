@@ -8,7 +8,7 @@ import {
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { Role } from './enums/role.enum';
+import { RoleEnum } from './enums/role.enum';
 import { baseSchema } from '../base.schema';
 import { ImageType } from '@/modules/uploads/types/file.interface';
 
@@ -22,9 +22,9 @@ export const users = pgTable(
     firstName: text('first_name').notNull(),
     secondName: text('second_name').notNull(),
     mail: text('email').notNull().unique(),
-    password: text('password').notNull(),
+    password: text('password'),
     phone: text('phone'),
-    role: roleEnum('role').$type<Role>().default(Role.USER).notNull(),
+    role: roleEnum('role').$type<RoleEnum>().default(RoleEnum.USER).notNull(),
     birthDate: date('birth_date'),
     image: json('image').$type<ImageType>(),
   },

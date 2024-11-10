@@ -45,9 +45,6 @@ export const sendMail = async (
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };

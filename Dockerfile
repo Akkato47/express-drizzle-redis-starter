@@ -1,8 +1,6 @@
-FROM node:20-alpine as base
+FROM node:20-alpine
 
-FROM base as builder
-
-WORKDIR /app
+WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
 
@@ -10,26 +8,6 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn build
-
-FROM base as prod
-
-WORKDIR /usr/src/app
-
-ENV NODE_ENV=production
-ENV PORT=8080
-
-COPY package.json ./
-
-RUN yarn install --production
-
-COPY --from=builder /app/dist ./
-
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S user99 -u 1001
-RUN chown -R user99:nodejs /usr/src/app
-USER user99
-
 EXPOSE 8000
 
-CMD [ "node", "/usr/src/app/main.js" ]
+CMD ["yarn", "dev"]

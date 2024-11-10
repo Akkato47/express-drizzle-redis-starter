@@ -67,12 +67,12 @@ export const createUser = async (createUserDto: CreateUserDto) => {
 
     const user = await db
       .insert(users)
-      .values({ ...createUserDto, password: hashPassword })
+      .values({ ...createUserDto })
       .returning();
-    // FIXME Waiting for solving issue https://github.com/drizzle-team/drizzle-orm/issues/2694
-    // if (createUserDto.password) {
-    //     await db.update(users).set({ password: createUserDto.password });
-    // }
+
+    if (createUserDto.password) {
+      await db.update(users).set({ password: createUserDto.password });
+    }
     return user[0];
   } catch (error) {
     if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
