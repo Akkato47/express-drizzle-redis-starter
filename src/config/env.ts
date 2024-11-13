@@ -5,6 +5,7 @@ import 'dotenv/config';
 const envSchema = z.object({
   PORT: z.string().optional(),
   NODE_ENV: z.string().optional(),
+  PRODUCTION_URL: z.string().optional(),
   CLIENT_BASE_URL: z.string().url(),
   DATABASE_HOST: z.string(),
   DATABASE_PORT: z.string(),

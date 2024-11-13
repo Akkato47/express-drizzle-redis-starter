@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "start": "node dist/main.js",
+    "migrate:prod": "node dist/db/drizzle/migrate.js",
     "dev": "ts-node-dev -r tsconfig-paths/register --files ./src/main.ts",
     "generate": "drizzle-kit generate --config=src/db/drizzle/drizzle.config.ts",
     "introspect": "drizzle-kit introspect --config=src/db/drizzle/drizzle.config.ts",

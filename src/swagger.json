@@ -93,7 +93,7 @@
     },
     "/user/profile": {
       "get": {
-        "tags": ["user"],
+        "tags": ["User"],
         "summary": "Get user profile",
         "description": "Retrieves the profile information of the authenticated user.",
         "security": [

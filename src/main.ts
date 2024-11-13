@@ -21,6 +21,10 @@ export const DI = {} as {
 };
 
 export const init = (async () => {
+  swaggerDocument.host = config.app.isProduction
+    ? config.app.productionUrl
+    : `localhost:${port}`;
+
   app.use(cors(config.cors));
   app.use(express.json());
   app.use(cookieParser());

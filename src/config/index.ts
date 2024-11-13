@@ -7,6 +7,7 @@ export default {
   app: {
     isProduction,
     port: env.PORT || 8080,
+    productionUrl: env.PRODUCTION_URL || `localhost:${env.PORT}`,
   },
   cors: {
     origin: [

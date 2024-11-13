@@ -66,6 +66,7 @@ Create a `.env` file in the root folder of the project and fill it with the valu
 ```env
 PORT=8000
 NODE_ENV=dev
+PRODUCTION_URL=api.domain.ru
 CLIENT_BASE_URL=http://localhost:5173
 
 DATABASE_HOST=127.0.0.1
