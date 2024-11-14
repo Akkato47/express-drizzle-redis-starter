@@ -46,7 +46,7 @@ export const init = (async () => {
     }
   );
 
-  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     logger.error(err.stack);
     next();
     res.status(500).send('Something broke!');

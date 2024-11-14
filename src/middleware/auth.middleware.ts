@@ -4,6 +4,7 @@ import token from '@/modules/auth/lib/token';
 import { refresh } from '@/modules/auth/auth.service';
 import { extractAccessTokenFromCookie } from './lib/extractAccessTokenFromCookie';
 import { extractRefreshTokenFromCookie } from './lib/extractRefreshTokenFromCookie';
+import { logger } from '@/lib/loger';
 
 export async function isAuthenticated(
   req: Request,
