@@ -5,6 +5,7 @@ const isProduction = env.NODE_ENV === 'prod';
 
 export default {
   app: {
+    name: env.APPNAME,
     isProduction,
     port: env.PORT || 8080,
     productionUrl: env.PRODUCTION_URL || `localhost:${env.PORT}`,

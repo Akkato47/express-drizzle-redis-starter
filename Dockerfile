@@ -1,4 +1,5 @@
-ARG PORT="${PORT}" \
+ARG APPNAME="${APPNAME}" \
+  PORT="${PORT}" \
   NODE_ENV="${NODE_ENV}" \
   CLIENT_BASE_URL="${CLIENT_BASE_URL}" \
   DATABASE_HOST="${DATABASE_HOST}" \
@@ -53,7 +54,8 @@ COPY --from=builder /var/www/docker-start-db.sh .
 COPY package.json ./
 
 
-ENV PORT="${PORT}" \
+ENV APPNAME="${APPNAME}" \
+  PORT="${PORT}" \
   NODE_ENV="${NODE_ENV}" \
   CLIENT_BASE_URL="${CLIENT_BASE_URL}" \
   DATABASE_HOST="${DATABASE_HOST}" \

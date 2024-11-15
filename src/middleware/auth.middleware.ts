@@ -4,7 +4,7 @@ import token from '@/modules/auth/lib/token';
 import { refresh } from '@/modules/auth/auth.service';
 import { extractAccessTokenFromCookie } from './lib/extractAccessTokenFromCookie';
 import { extractRefreshTokenFromCookie } from './lib/extractRefreshTokenFromCookie';
-import { logger } from '@/lib/loger';
+import config from '@/config';
 
 export async function isAuthenticated(
   req: Request,
@@ -42,11 +42,11 @@ export async function isAuthenticated(
       tokenType: 'access',
     });
 
-    res.cookie('starter-access-token', refreshedTokens.token, {
+    res.cookie(`${config.app.name}-access-token`, refreshedTokens.token, {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       httpOnly: true,
     });
-    res.cookie('starter-refresh-token', refreshedTokens.refresh, {
+    res.cookie(`${config.app.name}-refresh-token`, refreshedTokens.refresh, {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       httpOnly: true,
     });

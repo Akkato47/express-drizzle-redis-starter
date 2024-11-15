@@ -3,6 +3,7 @@ import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as authService from './auth.service';
 import { LoginUserDto } from './dto/login.dto';
 import { OAuthEnum } from './enums/oauth.enum';
+import config from '@/config';
 
 export async function register(
   req: Request<{}, {}, CreateUserDto>,
@@ -12,12 +13,12 @@ export async function register(
   try {
     const data = await authService.register(req.body);
 
-    res.cookie('starter-access-token', data.token, {
+    res.cookie(`${config.app.name}-access-token`, data.token, {
       expires: new Date(new Date().getTime() + 5 * 60 * 1000),
       httpOnly: true,
     });
 
-    res.cookie('starter-refresh-token', data.refresh, {
+    res.cookie(`${config.app.name}-refresh-token`, data.refresh, {
       expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
       httpOnly: true,
     });
@@ -36,12 +37,12 @@ export async function login(
   try {
     const data = await authService.login(req.body);
 
-    res.cookie('starter-access-token', data.token, {
+    res.cookie(`${config.app.name}-access-token`, data.token, {
       expires: new Date(new Date().getTime() + 5 * 60 * 1000),
       httpOnly: true,
     });
 
-    res.cookie('starter-refresh-token', data.refresh, {
+    res.cookie(`${config.app.name}-refresh-token`, data.refresh, {
       expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
       httpOnly: true,
     });
@@ -54,11 +55,11 @@ export async function login(
 
 export async function logout(req: Request, res: Response, next: NextFunction) {
   try {
-    res.cookie('starter-access-token', '', {
+    res.cookie(`${config.app.name}-access-token`, '', {
       expires: new Date(0),
       httpOnly: true,
     });
-    res.cookie('starter-refresh-token', '', {
+    res.cookie(`${config.app.name}-refresh-token`, '', {
       expires: new Date(0),
       httpOnly: true,
     });
@@ -83,12 +84,12 @@ export async function oAuth(
   try {
     const data = await authService.oAuth(req.body.code, req.body.type);
 
-    res.cookie('starter-access-token', data.token, {
+    res.cookie(`${config.app.name}-access-token`, data.token, {
       expires: new Date(new Date().getTime() + 5 * 60 * 1000),
       httpOnly: true,
     });
 
-    res.cookie('starter-refresh-token', data.refresh, {
+    res.cookie(`${config.app.name}-refresh-token`, data.refresh, {
       expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
       httpOnly: true,
     });
