@@ -1,6 +1,8 @@
 ARG APPNAME="${APPNAME}" \
   PORT="${PORT}" \
-  NODE_ENV="${NODE_ENV}" \
+  NODE_ENV="prod" \
+  LOCALE="true" \
+  PRODUCTION_URL="${PRODUCTION_URL}" \
   CLIENT_BASE_URL="${CLIENT_BASE_URL}" \
   DATABASE_HOST="${DATABASE_HOST}" \
   DATABASE_PORT="${DATABASE_PORT}" \
@@ -10,7 +12,6 @@ ARG APPNAME="${APPNAME}" \
   DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}" \
   JWT_ACCESS_SECRET="${JWT_ACCESS_SECRET}" \
   JWT_REFRESH_SECRET="${JWT_REFRESH_SECRET}" \
-  JWT_PASSWORD_RESET_SECRET="${JWT_PASSWORD_RESET_SECRET}" \
   REDIS_HOST="${REDIS_HOST}" \
   REDIS_PORT="${REDIS_PORT}" \
   REDIS_PASSWORD="${REDIS_PASSWORD}" \
@@ -22,11 +23,7 @@ ARG APPNAME="${APPNAME}" \
   MAIL_USER="${MAIL_USER}" \
   MAIL_PASSWORD="${MAIL_PASSWORD}" \
   MAIL_FROM="${MAIL_FROM}" \
-  MAIL_PORT="${MAIL_PORT}" \
-  YANDEX_CLIENT_ID="${YANDEX_CLIENT_ID}" \
-  YANDEX_CLIENT_SECRET="${YANDEX_CLIENT_SECRET}" \
-  YANDEX_BASE_URL="${YANDEX_BASE_URL}" \
-  YANDEX_LOGIN_URL="${YANDEX_LOGIN_URL}"
+  MAIL_PORT="${MAIL_PORT}" 
 
 
 FROM node:20.11-alpine AS builder
@@ -35,28 +32,31 @@ WORKDIR /var/www
 
 COPY package.json ./
 
-RUN yarn install
+RUN npm install
 
 COPY . .
 
-RUN yarn build
+RUN npm run build
 
-FROM node:20.11-alpine
+FROM builder
 
 WORKDIR /var/www
 
-COPY --from=builder /var/www/node_modules ./node_modules
 COPY --from=builder /var/www/dist ./dist
 COPY --from=builder /var/www/src/db/drizzle/migrations ./dist/db/drizzle/migrations
-COPY --from=builder /var/www/yarn.lock .
-COPY --from=builder /var/www/docker-start-db.sh .
+COPY --from=builder /var/www/src/db/drizzle/migrations/meta ./dist/db/drizzle/migrations/meta
+COPY --from=builder /var/www/package-lock.json .
+COPY --from=builder /var/www/scripts/install-prod.sh ./scripts
 
 COPY package.json ./
 
+RUN sh ./scripts/install-prod.sh
 
 ENV APPNAME="${APPNAME}" \
   PORT="${PORT}" \
   NODE_ENV="${NODE_ENV}" \
+  LOCALE="${LOCALE}" \
+  PRODUCTION_URL="${PRODUCTION_URL}" \
   CLIENT_BASE_URL="${CLIENT_BASE_URL}" \
   DATABASE_HOST="${DATABASE_HOST}" \
   DATABASE_PORT="${DATABASE_PORT}" \
@@ -66,7 +66,6 @@ ENV APPNAME="${APPNAME}" \
   DATABASE_URL="postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}" \
   JWT_ACCESS_SECRET="${JWT_ACCESS_SECRET}" \
   JWT_REFRESH_SECRET="${JWT_REFRESH_SECRET}" \
-  JWT_PASSWORD_RESET_SECRET="${JWT_PASSWORD_RESET_SECRET}" \
   REDIS_HOST="${REDIS_HOST}" \
   REDIS_PORT="${REDIS_PORT}" \
   REDIS_PASSWORD="${REDIS_PASSWORD}" \
@@ -78,12 +77,6 @@ ENV APPNAME="${APPNAME}" \
   MAIL_USER="${MAIL_USER}" \
   MAIL_PASSWORD="${MAIL_PASSWORD}" \
   MAIL_FROM="${MAIL_FROM}" \
-  MAIL_PORT="${MAIL_PORT}" \
-  YANDEX_CLIENT_ID="${YANDEX_CLIENT_ID}" \
-  YANDEX_CLIENT_SECRET="${YANDEX_CLIENT_SECRET}" \
-  YANDEX_BASE_URL="${YANDEX_BASE_URL}" \
-  YANDEX_LOGIN_URL="${YANDEX_LOGIN_URL}"
+  MAIL_PORT="${MAIL_PORT}" 
 
 EXPOSE ${PORT}
-
-CMD ["sh", "docker-start-db.sh"]

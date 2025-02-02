@@ -1,19 +1,19 @@
-import * as jwtService from './jwt.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { LoginUserDto } from './dto/login.dto';
-import * as userService from '../user/user.service';
-import { CustomError } from '@/utils/custom_error';
-import { compare } from 'bcrypt';
-import { TokenDto } from './dto/create-token.dto';
-import { HttpStatus } from '@/utils/enums/http-status';
 import axios from 'axios';
+import { compare } from 'bcrypt';
+
 import config from '@/config';
-import {
-  IOAuthDataResponse,
-  IOAuthTokenResponse,
-} from './types/oauth.interface';
-import { OAuthEnum } from './enums/oauth.enum';
 import { RoleEnum } from '@/db/drizzle/schema/user/enums/role.enum';
+import { CustomError } from '@/utils/custom_error';
+import { HttpStatus } from '@/utils/enums/http-status';
+
+import type { CreateUserDto } from '../user/dto/create-user.dto';
+import type { TokenDto } from './dto/create-token.dto';
+import type { LoginUserDto } from './dto/login.dto';
+import type { OAuthEnum } from './enums/oauth.enum';
+import type { IOAuthDataResponse, IOAuthTokenResponse } from './types/oauth.interface';
+
+import * as userService from '../user/user.service';
+import * as jwtService from './jwt.service';
 
 export const login = async (userData: LoginUserDto) => {
   try {
@@ -21,14 +21,11 @@ export const login = async (userData: LoginUserDto) => {
     const payload: TokenDto = {
       role: user.role,
       uid: user.uid,
-      oAuthId: user.oAuthId ? user.oAuthId : '',
+      oAuthId: user.oAuthId ? user.oAuthId : ''
     };
     const data = { role: user.role, image: user.image };
     return { ...(await jwtService.createTokenAsync(payload)), data };
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };
@@ -39,14 +36,11 @@ export const register = async (userData: CreateUserDto) => {
     const payload: TokenDto = {
       role: user.role,
       uid: user.uid,
-      oAuthId: userData.oAuthId ? userData.oAuthId : '',
+      oAuthId: userData.oAuthId ? userData.oAuthId : ''
     };
     const data = { role: user.role, image: user.image };
     return { ...(await jwtService.createTokenAsync(payload)), data };
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };
@@ -60,28 +54,24 @@ export const logout = async (uid: string, oAuthId?: string) => {
         throw new CustomError(HttpStatus.UNAUTHORIZED);
       }
 
-      const [oAuth, token] = result.res[0].split(':');
+      const [_, token] = result.res[0].split(':');
       await jwtService.removeAllTokensByOAuthId(oAuthId);
       await axios.post<IOAuthTokenResponse>(
         `${config[result.value].tokenUrl}/revoke_token`,
         {
           access_token: token,
           client_id: config[result.value].clientID,
-          client_secret: config[result.value].clientSecret,
+          client_secret: config[result.value].clientSecret
         },
         {
           headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+            'Content-Type': 'multipart/form-data'
+          }
         }
       );
     }
     return true;
   } catch (error) {
-    console.log(error);
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };
@@ -96,7 +86,7 @@ export const refresh = async (refreshToken: string) => {
     const user = await userService.getUserByUID(userUid);
     const tokens = await jwtService.createTokenAsync({
       uid: userUid,
-      role: user.role,
+      role: user.role
     });
     await jwtService.removeToken(result[0]);
     return tokens;
@@ -123,9 +113,6 @@ const validateUser = async (userData: LoginUserDto) => {
     }
     throw new CustomError(HttpStatus.BAD_REQUEST);
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };
@@ -136,32 +123,29 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
       `${config[type].tokenUrl}/token`,
       {
         grant_type: 'authorization_code',
-        code: code,
+        code,
         client_id: config[type].clientID,
-        client_secret: config[type].clientSecret,
+        client_secret: config[type].clientSecret
       },
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+          'Content-Type': 'multipart/form-data'
+        }
       }
     );
-    const userData = await axios.get<IOAuthDataResponse>(
-      config[type].loginUrl,
-      {
-        params: {
-          format: 'json',
-          jwt_secret: config.yandexApi.clientSecret,
-          with_openid_identity: 1,
-          oauth_token: tokens.data.access_token,
-        },
+    const userData = await axios.get<IOAuthDataResponse>(config[type].loginUrl, {
+      params: {
+        format: 'json',
+        jwt_secret: config.yandexApi.clientSecret,
+        with_openid_identity: 1,
+        oauth_token: tokens.data.access_token
       }
-    );
+    });
     await jwtService.removeAllTokensByOAuthId(userData.data.id);
     await jwtService.storeOAuthToken({
       oAuthId: userData.data.id,
       token: tokens.data.access_token,
-      type,
+      type
     });
 
     const tryFindUser = await userService.getUserByOAuthId(userData.data.id);
@@ -172,14 +156,14 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
         secondName: userData.data.last_name,
         mail: userData.data.default_email,
         phone: userData.data.default_phone.number,
-        role: RoleEnum.USER,
+        role: RoleEnum.USER
       });
       return data;
     }
     const payload: TokenDto = {
       role: tryFindUser.role,
       uid: tryFindUser.uid,
-      oAuthId: userData.data.id,
+      oAuthId: userData.data.id
     };
     const data = { role: tryFindUser.role, image: tryFindUser.image };
     return { ...(await jwtService.createTokenAsync(payload)), data };

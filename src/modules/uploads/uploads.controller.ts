@@ -1,11 +1,8 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
+
 import * as uploadService from './uploads.service';
 
-export async function uploadFile(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function uploadFile(req: Request, res: Response, next: NextFunction) {
   try {
     const file = req.file;
     if (!file) {

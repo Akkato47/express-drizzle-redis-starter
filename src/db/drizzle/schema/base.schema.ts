@@ -5,5 +5,5 @@ export const baseSchema = {
   createdAt: date('created_at').defaultNow().notNull(),
   updatedAt: date('updated_at')
     .$onUpdate(() => new Date().toISOString())
-    .notNull(),
+    .notNull()
 };

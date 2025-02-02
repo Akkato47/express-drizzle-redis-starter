@@ -1,18 +1,28 @@
 {
   "name": "express-starter",
+  "type": "module",
   "version": "2.0.0",
-  "main": "dist/main.js",
   "license": "MIT",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc && tsc-alias",
     "start": "node dist/main.js",
     "migrate:prod": "node dist/db/drizzle/migrate.js",
+    "seed:prod": "node dist/db/drizzle/seed.js",
     "dev": "ts-node-dev -r tsconfig-paths/register --files ./src/main.ts",
     "generate": "drizzle-kit generate --config=src/db/drizzle/drizzle.config.ts",
     "introspect": "drizzle-kit introspect --config=src/db/drizzle/drizzle.config.ts",
     "migrate": "ts-node src/db/drizzle/migrate.ts",
+    "seed": "ts-node src/db/drizzle/seed.ts",
+    "lint": "eslint . --fix",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "pretty": "yarn format && yarn lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "prepare": "husky install"
   },
   "dependencies": {
     "aws-sdk": "^2.1691.0",
@@ -38,10 +48,13 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@siberiacancode/eslint": "^2.7.0",
+    "@siberiacancode/prettier": "^1.2.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/morgan": "^1.9.9",
     "@types/multer": "^1.4.12",
@@ -51,11 +64,25 @@
     "@types/uuid": "^10.0.0",
     "drizzle-kit": "0.22.0",
     "husky": "^9.1.6",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.4.3",
     "prettier": "^3.3.3",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "tsc-alias": "^1.8.7",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }

@@ -1,34 +1,29 @@
 import jwt from 'jsonwebtoken';
 
 import config from '@/config';
+
 import type { TDecodedToken } from '../types/decodedToken.interface';
 
-type TGenerateOptions = {
-  payload: string | object | Buffer;
-  tokenType: 'access' | 'refresh' | 'passwordReset';
-};
+interface TGenerateOptions {
+  payload: object | string | Buffer;
+  tokenType: 'access' | 'passwordReset' | 'refresh';
+}
 
-type TVerifyOptions = {
+interface TVerifyOptions {
   token: string;
   tokenType: TGenerateOptions['tokenType'];
-};
+}
 
 function selectFunc(tokenType: TGenerateOptions['tokenType']) {
   if (tokenType === 'refresh') {
     return {
       secret: config.jwt.refresh.secret,
-      expiresIn: config.jwt.refresh.expiresIn || '30d',
-    };
-  }
-  if (tokenType === 'passwordReset') {
-    return {
-      secret: config.jwt.passwordReset.secret,
-      expiresIn: config.jwt.passwordReset.expiresIn || '5m',
+      expiresIn: config.jwt.refresh.expiresIn || '30d'
     };
   }
   return {
     secret: config.jwt.access.secret,
-    expiresIn: config.jwt.access.expiresIn || '5m',
+    expiresIn: config.jwt.access.expiresIn || '5m'
   };
 }
 
@@ -38,7 +33,7 @@ function generate({ payload, tokenType }: TGenerateOptions): string {
   return jwt.sign(payload, secret, {
     expiresIn,
     algorithm: 'HS256',
-    subject: tokenType,
+    subject: tokenType
   });
 }
 
@@ -48,7 +43,7 @@ function verify({ token, tokenType }: TVerifyOptions) {
   try {
     return jwt.verify(token, secret, {
       algorithms: ['HS256'],
-      subject: tokenType,
+      subject: tokenType
     }) as TDecodedToken;
   } catch (error) {
     if (tokenType === 'access') {
@@ -60,5 +55,5 @@ function verify({ token, tokenType }: TVerifyOptions) {
 
 export default {
   verify,
-  generate,
+  generate
 };

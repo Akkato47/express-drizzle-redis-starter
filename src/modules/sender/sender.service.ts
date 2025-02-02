@@ -1,35 +1,31 @@
-import { CustomError } from '@/utils/custom_error';
-import { HttpStatus } from '@/utils/enums/http-status';
+import { resolve } from 'node:path';
 import { createTransport } from 'nodemailer';
-import type { SendOptions } from './types/send-mail.type';
-import config from '@/config';
 import hbs from 'nodemailer-express-handlebars';
-import type { MailDto } from './dto/mail.dto';
-import { resolve } from 'path';
 
-export const sendMail = async (
-  options: SendOptions,
-  data: MailDto,
-  path: string
-) => {
+import config from '@/config';
+
+import type { MailDto } from './dto/mail.dto';
+import type { SendOptions } from './types/send-mail.type';
+
+export const sendMail = async (options: SendOptions, data: MailDto, path: string) => {
   try {
     const transporter = createTransport({
       host: config.mail.host,
       port: config.mail.port,
       auth: {
         user: config.mail.user,
-        pass: config.mail.password,
-      },
+        pass: config.mail.password
+      }
     });
 
     const handlebarOptions = {
       viewEngine: {
         extName: '.hbs',
         partialsDir: resolve(__dirname, 'templates'),
-        defaultLayout: false,
+        defaultLayout: false
       },
       viewPath: resolve(__dirname, 'templates'),
-      extName: '.hbs',
+      extName: '.hbs'
     };
     transporter.use('compile', hbs(handlebarOptions));
 
@@ -39,8 +35,8 @@ export const sendMail = async (
       subject: options.subject,
       template: `${path}`,
       context: {
-        ...data,
-      },
+        ...data
+      }
     };
     await transporter.sendMail(mailOptions);
     return true;

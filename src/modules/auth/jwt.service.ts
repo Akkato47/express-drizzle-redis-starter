@@ -1,13 +1,15 @@
-import { v4 } from 'uuid';
 import * as jwt from 'jsonwebtoken';
-import type { TokenDto } from './dto/create-token.dto';
+import { v4 } from 'uuid';
+
 import config from '@/config';
 import redisClient from '@/db/redis';
-import { OAuthEnum } from './enums/oauth.enum';
+
+import type { TokenDto } from './dto/create-token.dto';
+import type { OAuthEnum } from './enums/oauth.enum';
 
 interface IStoreToken {
-  userUid: string;
   token: string;
+  userUid: string;
 }
 
 interface IStoreOAuthToken {
@@ -16,24 +18,24 @@ interface IStoreOAuthToken {
   type: OAuthEnum;
 }
 
+const storeToken = async (data: IStoreToken) => {
+  const key = `${data.userUid}:${data.token}`;
+  const expiration = 24 * 60 * 60;
+  await redisClient.SET(key, 'true', { EX: expiration });
+};
+
 export const createTokenAsync = async (tokenDto: TokenDto) => {
   const refresh = v4();
   const res = {
     token: jwt.sign(tokenDto, config.jwt.access.secret, {
       expiresIn: config.jwt.access.expiresIn,
-      subject: 'access',
+      subject: 'access'
     }),
-    refresh,
+    refresh
   };
 
   await storeToken({ token: refresh, userUid: tokenDto.uid });
   return res;
-};
-
-const storeToken = async (data: IStoreToken) => {
-  const key = `${data.userUid}:${data.token}`;
-  const expiration = 24 * 60 * 60;
-  await redisClient.SET(key, 'true', { EX: expiration });
 };
 
 export const storeOAuthToken = async (data: IStoreOAuthToken) => {
@@ -44,7 +46,7 @@ export const storeOAuthToken = async (data: IStoreOAuthToken) => {
 
 export const getToken = async (token: string) => {
   const res = await redisClient.KEYS(`*:${token}`);
-  if (res.length != 1) {
+  if (res.length !== 1) {
     return null;
   }
   return res;
@@ -52,7 +54,7 @@ export const getToken = async (token: string) => {
 
 export const getTokenOAuthId = async (oAuthId: string) => {
   const res = await redisClient.KEYS(`${oAuthId}:*`);
-  if (res.length != 1) {
+  if (res.length !== 1) {
     return null;
   }
   const value = await redisClient.get(res[0]);

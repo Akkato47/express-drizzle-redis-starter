@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import * as express from 'express';
 
 declare global {

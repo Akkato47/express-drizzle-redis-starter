@@ -1,11 +1,11 @@
 import { z } from 'zod';
-
 import 'dotenv/config';
 
 const envSchema = z.object({
   APPNAME: z.string().optional(),
   PORT: z.string().optional(),
   NODE_ENV: z.string().optional(),
+  LOCALE: z.string().optional(),
   PRODUCTION_URL: z.string().optional(),
   CLIENT_BASE_URL: z.string().url(),
   DATABASE_HOST: z.string(),
@@ -34,7 +34,7 @@ const envSchema = z.object({
   YANDEX_CLIENT_ID: z.string().nullable(),
   YANDEX_CLIENT_SECRET: z.string().nullable(),
   YANDEX_BASE_URL: z.string().nullable(),
-  YANDEX_LOGIN_URL: z.string().nullable(),
+  YANDEX_LOGIN_URL: z.string().nullable()
 });
 
 export const env = envSchema.parse(process.env);

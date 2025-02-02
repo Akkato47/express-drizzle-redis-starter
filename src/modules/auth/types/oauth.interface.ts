@@ -6,20 +6,20 @@ export interface IOAuthTokenResponse {
 }
 
 export interface IOAuthDataResponse {
-  id: string;
-  login: string;
-  client_id: string;
-  openid_identities: string[];
-  display_name: string;
-  real_name: string;
-  first_name: string;
-  last_name: string;
-  sex: string;
-  default_email: string;
-  emails: string[];
   birthday: string;
+  client_id: string;
   default_avatar_id: string;
-  is_avatar_empty: boolean;
+  default_email: string;
   default_phone: { id: number; number: string };
+  display_name: string;
+  emails: string[];
+  first_name: string;
+  id: string;
+  is_avatar_empty: boolean;
+  last_name: string;
+  login: string;
+  openid_identities: string[];
   psuid: string;
+  real_name: string;
+  sex: string;
 }

@@ -1,4 +1,5 @@
 import type { Config } from 'drizzle-kit';
+
 import config from '../../config';
 
 export default {
@@ -6,10 +7,10 @@ export default {
   out: './src/db/drizzle/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: config.database.postgres.url,
+    url: config.database.postgres.url
   },
   migrations: {
     schema: 'public',
-    table: 'migrations',
-  },
+    table: 'migrations'
+  }
 } satisfies Config;

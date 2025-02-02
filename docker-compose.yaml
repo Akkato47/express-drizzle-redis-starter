@@ -9,12 +9,17 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - ./data:/var/lib/postgresql/data
-    command: ['postgres', '-c', 'listen_addresses=*', '-c', 'log_statement=all']
+    command: [postgres, -c, 'listen_addresses=*', -c, log_statement=all]
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -q -U postgres']
+      test: [CMD-SHELL, pg_isready -q -U postgres]
       interval: 5s
       retries: 5
       start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1024M
 
   redis:
     image: 'redis:7-alpine'
@@ -28,15 +33,20 @@ services:
       - REDIS_REPLICATION_MODE=master
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: [CMD, redis-cli, ping]
       interval: 5s
       timeout: 3s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 524M
 
   express-app:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     depends_on:
       db:
         condition: service_healthy
@@ -45,13 +55,35 @@ services:
     ports:
       - '8000:8000'
     environment:
+      APPNAME: ${APPNAME}
+      PORT: ${PORT}
+      NODE_ENV: prod
+      LOCALE: true
+      PRODUCTION_URL: ${PRODUCTION_URL}
+      CLIENT_BASE_URL: ${CLIENT_BASE_URL}
       DATABASE_HOST: db
       DATABASE_PORT: ${DATABASE_PORT}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_URL: postgresql://postgres:${DATABASE_PASSWORD}@db:${DATABASE_PORT}/${DATABASE_NAME}
+      DATABASE_URL: postgresql://${DATABASE_USER}:${DATABASE_PASSWORD}@db:${DATABASE_PORT}/${DATABASE_NAME}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: redis_secret
-    command: sh -c "yarn --ignore-engines && yarn generate && yarn migrate && yarn dev"
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      BUCKET_KEY: ${BUCKET_KEY}
+      BUCKET_SECRET: ${BUCKET_SECRET}
+      BUCKET_ENDPOINT: ${BUCKET_ENDPOINT}
+      BUCKET_NAME: ${BUCKET_NAME}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_PORT: ${MAIL_PORT}
+    command: sh -c "npm run migrate:prod && npm run start"
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 2048M

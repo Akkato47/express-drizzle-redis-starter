@@ -1,9 +1,8 @@
-import config from '@/config';
-import { Request } from 'express';
+import type { Request } from 'express';
 
-export const extractRefreshTokenFromCookie = (
-  request: Request
-): string | undefined => {
+import config from '@/config';
+
+export const extractRefreshTokenFromCookie = (request: Request): string | undefined => {
   const token = request.cookies[`${config.app.name}-refresh-token`];
-  return token ? token : undefined;
+  return token || undefined;
 };

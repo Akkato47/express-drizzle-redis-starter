@@ -1,7 +1,7 @@
-export type TDecodedToken = {
-  uid: string;
-  role: string;
-  iat: number;
+export interface TDecodedToken {
   exp: number;
+  iat: number;
+  role: string;
   subject: string;
-};
+  uid: string;
+}

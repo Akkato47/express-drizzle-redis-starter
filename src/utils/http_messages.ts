@@ -35,8 +35,7 @@ export const httpMessages: { [key in HttpStatus]: string } = {
   [HttpStatus.PAYLOAD_TOO_LARGE]: 'Содержимое слишком велико',
   [HttpStatus.URI_TOO_LONG]: 'URI слишком длинный',
   [HttpStatus.UNSUPPORTED_MEDIA_TYPE]: 'Неподдерживаемый тип медиа',
-  [HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE]:
-    'Запрашиваемый диапазон не может быть удовлетворен',
+  [HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE]: 'Запрашиваемый диапазон не может быть удовлетворен',
   [HttpStatus.EXPECTATION_FAILED]: 'Ожидание не выполнено',
   [HttpStatus.I_AM_A_TEAPOT]: 'Я - чайник',
   [HttpStatus.MISDIRECTED]: 'Неправильно направлено',
@@ -49,5 +48,5 @@ export const httpMessages: { [key in HttpStatus]: string } = {
   [HttpStatus.BAD_GATEWAY]: 'Плохой шлюз',
   [HttpStatus.SERVICE_UNAVAILABLE]: 'Служба недоступна',
   [HttpStatus.GATEWAY_TIMEOUT]: 'Время ожидания шлюза',
-  [HttpStatus.HTTP_VERSION_NOT_SUPPORTED]: 'Версия HTTP не поддерживается',
+  [HttpStatus.HTTP_VERSION_NOT_SUPPORTED]: 'Версия HTTP не поддерживается'
 };

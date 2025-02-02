@@ -1,4 +1,5 @@
-import { jsonb, pgTable, varchar, uuid } from 'drizzle-orm/pg-core';
+import { jsonb, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+
 import { baseSchema } from '../base.schema';
 
 export class ThumbnailImage {
@@ -17,7 +18,7 @@ export const files = pgTable('files', {
   url: varchar('url', { length: 255 }).notNull(),
   type: varchar('type', { length: 255 }).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
-  uploader: uuid('uploader').notNull(),
+  uploader: uuid('uploader').notNull()
 });
 
 export const images = pgTable('images', {
@@ -27,5 +28,5 @@ export const images = pgTable('images', {
   type: varchar('type', { length: 255 }).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
   uploader: uuid('uploader').notNull(),
-  thumbnail: jsonb('thumbnail').$type<ThumbnailImage>().notNull(),
+  thumbnail: jsonb('thumbnail').$type<ThumbnailImage>().notNull()
 });

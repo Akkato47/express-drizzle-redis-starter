@@ -1,5 +1,5 @@
-import { RoleEnum } from '@/db/drizzle/schema/user/enums/role.enum';
-import { InsertUser } from '@/db/drizzle/schema/user/schema';
+import type { RoleEnum } from '@/db/drizzle/schema/user/enums/role.enum';
+import type { InsertUser } from '@/db/drizzle/schema/user/schema';
 
 export class CreateUserDto implements InsertUser {
   firstName: string;

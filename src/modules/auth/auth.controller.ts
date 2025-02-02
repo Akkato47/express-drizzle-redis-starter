@@ -1,12 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import * as authService from './auth.service';
-import { LoginUserDto } from './dto/login.dto';
-import { OAuthEnum } from './enums/oauth.enum';
+import type { NextFunction, Request, Response } from 'express';
+
 import config from '@/config';
 
+import type { CreateUserDto } from '../user/dto/create-user.dto';
+import type { LoginUserDto } from './dto/login.dto';
+import type { OAuthEnum } from './enums/oauth.enum';
+
+import * as authService from './auth.service';
+
 export async function register(
-  req: Request<{}, {}, CreateUserDto>,
+  req: Request<object, object, CreateUserDto>,
   res: Response,
   next: NextFunction
 ) {
@@ -15,12 +18,12 @@ export async function register(
 
     res.cookie(`${config.app.name}-access-token`, data.token, {
       expires: new Date(new Date().getTime() + 5 * 60 * 1000),
-      httpOnly: true,
+      httpOnly: true
     });
 
     res.cookie(`${config.app.name}-refresh-token`, data.refresh, {
       expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
-      httpOnly: true,
+      httpOnly: true
     });
 
     return res.send(data.data).status(200);
@@ -30,7 +33,7 @@ export async function register(
 }
 
 export async function login(
-  req: Request<{}, {}, LoginUserDto>,
+  req: Request<object, object, LoginUserDto>,
   res: Response,
   next: NextFunction
 ) {
@@ -39,12 +42,12 @@ export async function login(
 
     res.cookie(`${config.app.name}-access-token`, data.token, {
       expires: new Date(new Date().getTime() + 5 * 60 * 1000),
-      httpOnly: true,
+      httpOnly: true
     });
 
     res.cookie(`${config.app.name}-refresh-token`, data.refresh, {
       expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
-      httpOnly: true,
+      httpOnly: true
     });
 
     return res.send(data.data).status(200);
@@ -57,11 +60,11 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
   try {
     res.cookie(`${config.app.name}-access-token`, '', {
       expires: new Date(0),
-      httpOnly: true,
+      httpOnly: true
     });
     res.cookie(`${config.app.name}-refresh-token`, '', {
       expires: new Date(0),
-      httpOnly: true,
+      httpOnly: true
     });
 
     if (!req.user) {
@@ -77,7 +80,7 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function oAuth(
-  req: Request<{}, {}, { code: string; type: OAuthEnum }>,
+  req: Request<object, object, { code: string; type: OAuthEnum }>,
   res: Response,
   next: NextFunction
 ) {
@@ -86,12 +89,12 @@ export async function oAuth(
 
     res.cookie(`${config.app.name}-access-token`, data.token, {
       expires: new Date(new Date().getTime() + 5 * 60 * 1000),
-      httpOnly: true,
+      httpOnly: true
     });
 
     res.cookie(`${config.app.name}-refresh-token`, data.refresh, {
       expires: new Date(new Date().getTime() + 30 * 60 * 60 * 1000),
-      httpOnly: true,
+      httpOnly: true
     });
 
     return res.send(data.data).status(200);

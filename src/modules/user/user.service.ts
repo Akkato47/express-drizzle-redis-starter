@@ -1,12 +1,13 @@
+import { hash } from 'bcrypt';
 import { eq, or } from 'drizzle-orm';
 
 import { db } from '@/db/drizzle/connect';
 import { users } from '@/db/drizzle/schema/user/schema';
-import type { CreateUserDto } from './dto/create-user.dto';
 import { CustomError } from '@/utils/custom_error';
-import { hash } from 'bcrypt';
-import type { LoginUserDto } from '../auth/dto/login.dto';
 import { HttpStatus } from '@/utils/enums/http-status';
+
+import type { LoginUserDto } from '../auth/dto/login.dto';
+import type { CreateUserDto } from './dto/create-user.dto';
 
 export const getUserByUID = async (uid: string) => {
   try {
@@ -40,9 +41,7 @@ export const getUserByLoginData = async (loginData: LoginUserDto) => {
     const user = await db
       .select()
       .from(users)
-      .where(
-        or(eq(users.mail, loginData.mail), eq(users.phone, loginData.phone))
-      );
+      .where(or(eq(users.mail, loginData.mail), eq(users.phone, loginData.phone)));
     return user[0];
   } catch (error) {
     if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
@@ -54,10 +53,7 @@ export const getUserByLoginData = async (loginData: LoginUserDto) => {
 
 export const createUser = async (createUserDto: CreateUserDto) => {
   try {
-    const tryUser = await db
-      .select()
-      .from(users)
-      .where(eq(users.mail, createUserDto.mail));
+    const tryUser = await db.select().from(users).where(eq(users.mail, createUserDto.mail));
     if (tryUser.length > 0) {
       throw new CustomError(HttpStatus.CONFLICT);
     }
@@ -95,7 +91,7 @@ export const getUserProfile = async (userUid: string) => {
         phone: users.phone,
         birthDate: users.birthDate,
         image: users.image,
-        role: users.role,
+        role: users.role
       })
       .from(users)
       .where(eq(users.uid, userUid));

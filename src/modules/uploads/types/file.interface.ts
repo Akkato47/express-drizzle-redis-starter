@@ -1,12 +1,12 @@
 export interface FileType {
-  uid: string;
-  name: string;
   fileUrl: string;
+  name: string;
+  uid: string;
 }
 
 export interface ImageType {
-  uid: string;
-  name: string;
   fileUrl: string;
+  name: string;
   thumbnailUrl: string;
+  uid: string;
 }
