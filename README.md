@@ -47,7 +47,7 @@ The project is based on the following technologies and libraries:
 - **[Node.js](https://nodejs.org/)** – JavaScript runtime for server-side programming
 - **[Express](https://expressjs.com/)** – minimalist and flexible web framework for Node.js
 - **[Drizzle ORM](https://orm.drizzle.team/)** – ORM for PostgreSQL
-- **[Redis](https://redis.io/)** – high-performance cache and message broker
+- **[Redis](https://redis.io/)** – high-performance cache
 - **[Docker](https://www.docker.com/)** – containerization and dependency management
 
 ## 📦 Installation
