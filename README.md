@@ -33,6 +33,8 @@ Implemented features in the project:
 - [x] Mail sender.
 - [x] S3 uploads.
 - [x] OAuth2.0 authorization via Yandex.
+- [x] Eslint & Prettier.
+- [ ] Testing.
 - [ ] OAuth2.0 authorization via VK.
 - [ ] ELK.
 - [ ] Prometheus and Grafana.
