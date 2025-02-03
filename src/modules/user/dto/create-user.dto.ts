@@ -1,12 +1,12 @@
-import type { RoleEnum } from '@/db/drizzle/schema/user/enums/role.enum';
 import type { InsertUser } from '@/db/drizzle/schema/user/schema';
+import type { RoleType } from '@/db/drizzle/schema/user/types/role.type';
 
 export class CreateUserDto implements InsertUser {
   firstName: string;
   secondName: string;
   mail!: string;
   phone!: string | null;
-  role!: RoleEnum;
+  role!: RoleType;
   password?: string;
   oAuthId?: string | null;
 }
@@ -16,7 +16,7 @@ export class UpdateUserDto implements Partial<InsertUser> {
   secondName?: string;
   mail?: string;
   phone?: string | null;
-  role?: RoleEnum;
+  role?: RoleType;
   birthDate?: string;
   password?: string;
 }

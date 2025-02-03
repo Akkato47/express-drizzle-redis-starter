@@ -90,7 +90,6 @@ export const getUserProfile = async (userUid: string) => {
         mail: users.mail,
         phone: users.phone,
         birthDate: users.birthDate,
-        image: users.image,
         role: users.role
       })
       .from(users)

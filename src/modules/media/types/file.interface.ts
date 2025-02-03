@@ -1,10 +1,10 @@
-export interface FileType {
+export interface IFile {
   fileUrl: string;
   name: string;
   uid: string;
 }
 
-export interface ImageType {
+export interface IImage {
   fileUrl: string;
   name: string;
   thumbnailUrl: string;

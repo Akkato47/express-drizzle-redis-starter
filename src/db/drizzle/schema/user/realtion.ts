@@ -1,10 +1,17 @@
 import { relations } from 'drizzle-orm';
 
-import { userProfleInfo, users } from './schema';
+import { files, images } from '../media/schema';
+import { userProfle, users } from './schema';
 
 export const userRelations = relations(users, ({ one }) => ({
-  userProfleInfo: one(userProfleInfo, {
-    fields: [users.uid],
-    references: [userProfleInfo.userUid]
-  })
+  userProfleRelation: one(userProfle)
+}));
+
+export const userProfileRelations = relations(userProfle, ({ one, many }) => ({
+  usersRelation: one(users, {
+    fields: [userProfle.userUid],
+    references: [users.uid]
+  }),
+  imagesRelation: many(images),
+  fileRelation: many(files)
 }));

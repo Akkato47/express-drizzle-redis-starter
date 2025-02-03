@@ -2,7 +2,6 @@ import axios from 'axios';
 import { compare } from 'bcrypt';
 
 import config from '@/config';
-import { RoleEnum } from '@/db/drizzle/schema/user/enums/role.enum';
 import { CustomError } from '@/utils/custom_error';
 import { HttpStatus } from '@/utils/enums/http-status';
 
@@ -23,7 +22,7 @@ export const login = async (userData: LoginUserDto) => {
       uid: user.uid,
       oAuthId: user.oAuthId ? user.oAuthId : ''
     };
-    const data = { role: user.role, image: user.image };
+    const data = { role: user.role };
     return { ...(await jwtService.createTokenAsync(payload)), data };
   } catch (error) {
     throw error;
@@ -38,7 +37,7 @@ export const register = async (userData: CreateUserDto) => {
       uid: user.uid,
       oAuthId: userData.oAuthId ? userData.oAuthId : ''
     };
-    const data = { role: user.role, image: user.image };
+    const data = { role: user.role };
     return { ...(await jwtService.createTokenAsync(payload)), data };
   } catch (error) {
     throw error;
@@ -156,7 +155,7 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
         secondName: userData.data.last_name,
         mail: userData.data.default_email,
         phone: userData.data.default_phone.number,
-        role: RoleEnum.USER
+        role: 'USER'
       });
       return data;
     }
@@ -165,7 +164,7 @@ export const oAuth = async (code: string, type: OAuthEnum) => {
       uid: tryFindUser.uid,
       oAuthId: userData.data.id
     };
-    const data = { role: tryFindUser.role, image: tryFindUser.image };
+    const data = { role: tryFindUser.role };
     return { ...(await jwtService.createTokenAsync(payload)), data };
   } catch (error) {
     throw error;

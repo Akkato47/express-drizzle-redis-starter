@@ -16,17 +16,17 @@ export const files = pgTable('files', {
   ...baseSchema,
   key: varchar('key', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull(),
-  type: varchar('type', { length: 255 }).notNull(),
+  fileType: varchar('file_type', { length: 255 }).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
-  uploader: uuid('uploader').notNull()
+  uploaderUid: uuid('uploaderUid').notNull()
 });
 
 export const images = pgTable('images', {
   ...baseSchema,
   key: varchar('key', { length: 255 }).notNull(),
   url: varchar('url', { length: 255 }).notNull(),
-  type: varchar('type', { length: 255 }).notNull(),
+  fileType: varchar('file_type', { length: 255 }).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
-  uploader: uuid('uploader').notNull(),
+  uploaderUid: uuid('uploaderUid').notNull(),
   thumbnail: jsonb('thumbnail').$type<ThumbnailImage>().notNull()
 });

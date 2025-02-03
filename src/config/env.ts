@@ -16,7 +16,6 @@ const envSchema = z.object({
   DATABASE_URL: z.string().startsWith('postgresql://'),
   JWT_ACCESS_SECRET: z.string(),
   JWT_REFRESH_SECRET: z.string(),
-  JWT_PASSWORD_RESET_SECRET: z.string(),
   ACCESS_TOKEN_EXPIRES_IN: z.string().optional(),
   REFRESH_TOKEN_EXPIRES_IN: z.string().optional(),
   REDIS_HOST: z.string(),

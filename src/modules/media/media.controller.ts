@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import * as uploadService from './uploads.service';
+import * as uploadService from './media.service';
 
 export async function uploadFile(req: Request, res: Response, next: NextFunction) {
   try {

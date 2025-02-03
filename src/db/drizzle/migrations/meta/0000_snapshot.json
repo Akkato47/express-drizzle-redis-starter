@@ -1,5 +1,5 @@
 {
-  "id": "3a98516e-2f73-413d-8297-51ee7a9d83b6",
+  "id": "0357c87d-3eb0-4298-b7ae-810fae7df6fc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -40,8 +40,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "type": {
-          "name": "type",
+        "file_type": {
+          "name": "file_type",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -52,8 +52,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "uploader": {
-          "name": "uploader",
+        "uploaderUid": {
+          "name": "uploaderUid",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -100,8 +100,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "type": {
-          "name": "type",
+        "file_type": {
+          "name": "file_type",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -112,8 +112,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "uploader": {
-          "name": "uploader",
+        "uploaderUid": {
+          "name": "uploaderUid",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -130,8 +130,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.user_profle_info": {
-      "name": "user_profle_info",
+    "public.user_profle": {
+      "name": "user_profle",
       "schema": "",
       "columns": {
         "uid": {
@@ -163,12 +163,16 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_profle_info_user_uid_users_uid_fk": {
-          "name": "user_profle_info_user_uid_users_uid_fk",
-          "tableFrom": "user_profle_info",
+        "user_profle_user_uid_users_uid_fk": {
+          "name": "user_profle_user_uid_users_uid_fk",
+          "tableFrom": "user_profle",
           "tableTo": "users",
-          "columnsFrom": ["user_uid"],
-          "columnsTo": ["uid"],
+          "columnsFrom": [
+            "user_uid"
+          ],
+          "columnsTo": [
+            "uid"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -238,8 +242,7 @@
         },
         "role": {
           "name": "role",
-          "type": "role",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "default": "'USER'"
@@ -247,12 +250,6 @@
         "birth_date": {
           "name": "birth_date",
           "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "image": {
-          "name": "image",
-          "type": "json",
           "primaryKey": false,
           "notNull": false
         }
@@ -264,33 +261,35 @@
         "users_oauth_id_unique": {
           "name": "users_oauth_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["oauth_id"]
+          "columns": [
+            "oauth_id"
+          ]
         },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         },
         "users_mail_unique": {
           "name": "users_mail_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         },
         "users_phone_unique": {
           "name": "users_phone_unique",
           "nullsNotDistinct": false,
-          "columns": ["phone"]
+          "columns": [
+            "phone"
+          ]
         }
       }
     }
   },
-  "enums": {
-    "public.role": {
-      "name": "role",
-      "schema": "public",
-      "values": ["ORG", "USER", "ADMIN", "SU"]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "columns": {},

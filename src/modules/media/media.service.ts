@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 
 import config from '@/config';
 import { db } from '@/db/drizzle/connect';
-import { files, images, ThumbnailImage } from '@/db/drizzle/schema/upload/schema';
+import { files, images, ThumbnailImage } from '@/db/drizzle/schema/media/schema';
 import { CustomError } from '@/utils/custom_error';
 import { HttpStatus } from '@/utils/enums/http-status';
 
@@ -50,7 +50,7 @@ export const uploadPublicFile = async (buffer: Buffer, extension: string, folder
   return res;
 };
 
-export const uploadFile = async (file: Express.Multer.File, uploader: string) => {
+export const uploadFile = async (file: Express.Multer.File, uploaderUid: string) => {
   try {
     if (isImage(file.mimetype)) {
       const convertedOrigin = await convertImg(file);
@@ -63,9 +63,9 @@ export const uploadFile = async (file: Express.Multer.File, uploader: string) =>
           key: res.Key,
           name: file.originalname,
           thumbnail: thumbnail || new ThumbnailImage(res.Location, 'image/webp'),
-          type: 'image/webp',
+          fileType: 'image/webp',
           url: res.Location,
-          uploader
+          uploaderUid
         })
         .returning();
       return image[0];
@@ -80,9 +80,9 @@ export const uploadFile = async (file: Express.Multer.File, uploader: string) =>
         .values({
           key: uploadedRes.Key,
           name: file.originalname,
-          type: file.mimetype,
+          fileType: file.mimetype,
           url: uploadedRes.Location,
-          uploader
+          uploaderUid
         })
         .returning();
       return uploadedFile[0];

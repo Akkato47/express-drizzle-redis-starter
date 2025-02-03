@@ -3,7 +3,7 @@ import multer from 'multer';
 
 import { isAuthenticated } from '@/middleware/auth.middleware';
 
-import * as uploadController from './uploads.controller';
+import * as uploadController from './media.controller';
 
 const uploadMiddleware = multer({
   storage: multer.memoryStorage(),

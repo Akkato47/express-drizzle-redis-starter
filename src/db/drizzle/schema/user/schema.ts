@@ -1,11 +1,8 @@
-import { date, json, pgEnum, pgTable, text, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import { date, pgTable, text, unique, uuid, varchar } from 'drizzle-orm/pg-core';
 
-import type { ImageType } from '@/modules/uploads/types/file.interface';
+import type { RoleType } from './types/role.type';
 
 import { baseSchema } from '../base.schema';
-import { RoleEnum } from './enums/role.enum';
-
-export const roleEnum = pgEnum('role', ['ORG', 'USER', 'ADMIN', 'SU']);
 
 export const users = pgTable(
   'users',
@@ -17,9 +14,8 @@ export const users = pgTable(
     mail: text('email').notNull().unique(),
     password: text('password'),
     phone: text('phone'),
-    role: roleEnum('role').$type<RoleEnum>().default(RoleEnum.USER).notNull(),
-    birthDate: date('birth_date'),
-    image: json('image').$type<ImageType>()
+    role: text('role').$type<RoleType>().default('USER').notNull(),
+    birthDate: date('birth_date')
   },
   (table) => {
     return {
@@ -32,7 +28,7 @@ export const users = pgTable(
 export type InsertUser = typeof users.$inferInsert;
 export type SelectUser = typeof users.$inferSelect;
 
-export const userProfleInfo = pgTable('user_profle_info', {
+export const userProfle = pgTable('user_profle', {
   ...baseSchema,
   userUid: uuid('user_uid').references(() => users.uid)
 });
