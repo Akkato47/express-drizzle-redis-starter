@@ -10,9 +10,11 @@ import swaggerUi from 'swagger-ui-express';
 import config from './config';
 import redisClient from './db/redis';
 import { logger, LoggerStream } from './lib/loger';
+import { sendResponse } from './lib/reponse';
 import router from './modules/main.router';
 import swaggerDocument from './swagger.json';
 import { CustomError } from './utils/custom_error';
+import { HttpStatus } from './utils/enums/http-status';
 
 export const app = express();
 const port = config.app.port;
@@ -43,13 +45,13 @@ export const init = (async () => {
     const message = err.message || 'Internal Server Error.';
     logger.error(message);
     _next();
-    res.status(statusCode).json({ success: false, message });
+    sendResponse(res, statusCode, message);
   });
 
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     logger.error(err.stack);
     next();
-    res.status(500).send('Something broke!');
+    sendResponse(res, HttpStatus.INTERNAL_SERVER_ERROR, 'Something went wrong...');
   });
   redisClient.connect();
 

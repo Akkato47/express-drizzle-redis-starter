@@ -14,9 +14,6 @@ export const getUserByUID = async (uid: string) => {
     const user = await db.select().from(users).where(eq(users.uid, uid));
     return user[0];
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };
@@ -26,9 +23,6 @@ export const getUserByOAuthId = async (id: string) => {
     const user = await db.select().from(users).where(eq(users.oAuthId, id));
     return user[0];
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };
@@ -44,9 +38,6 @@ export const getUserByLoginData = async (loginData: LoginUserDto) => {
       .where(or(eq(users.mail, loginData.mail), eq(users.phone, loginData.phone)));
     return user[0];
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };
@@ -73,9 +64,6 @@ export const createUser = async (createUserDto: CreateUserDto) => {
     }
     return user[0];
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };
@@ -95,14 +83,11 @@ export const getUserProfile = async (userUid: string) => {
       .from(users)
       .where(eq(users.uid, userUid));
     if (!data[0]) {
-      throw new CustomError(HttpStatus.BAD_REQUEST, 'Пользователь не найден');
+      throw new CustomError(HttpStatus.NOT_FOUND, 'Пользователь не найден');
     }
 
     return data[0];
   } catch (error) {
-    if (error.statusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
-      throw new CustomError(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
     throw error;
   }
 };

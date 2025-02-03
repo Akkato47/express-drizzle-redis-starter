@@ -4,6 +4,8 @@ import config from '@/config';
 import { refresh } from '@/modules/auth/auth.service';
 import token from '@/modules/auth/lib/token';
 import { CustomError } from '@/utils/custom_error';
+import { ErrorMessage } from '@/utils/enums/errors';
+import { HttpStatus } from '@/utils/enums/http-status';
 
 import { extractAccessTokenFromCookie } from './lib/extractAccessTokenFromCookie';
 import { extractRefreshTokenFromCookie } from './lib/extractRefreshTokenFromCookie';
@@ -27,12 +29,12 @@ export async function isAuthenticated(req: Request, res: Response, next: NextFun
 
     const refreshToken = extractRefreshTokenFromCookie(req);
     if (!refreshToken) {
-      return next(new CustomError(401, 'Unauthorized'));
+      return next(new CustomError(HttpStatus.UNAUTHORIZED, ErrorMessage.ERROR_AUTHORIZATION));
     }
 
     const refreshedTokens = await refresh(refreshToken);
     if (!refreshedTokens) {
-      return next(new CustomError(401, 'Unauthorized')); // Если обновление не удалось
+      return next(new CustomError(HttpStatus.UNAUTHORIZED, ErrorMessage.ERROR_AUTHORIZATION));
     }
 
     user = token.verify({
@@ -52,6 +54,6 @@ export async function isAuthenticated(req: Request, res: Response, next: NextFun
     req.user = user;
     return next();
   } catch {
-    next(new CustomError(401, 'Unauthorized'));
+    next(new CustomError(HttpStatus.UNAUTHORIZED, ErrorMessage.ERROR_AUTHORIZATION));
   }
 }

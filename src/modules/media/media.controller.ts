@@ -1,5 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 
+import { sendResponse } from '@/lib/reponse';
+import { HttpStatus } from '@/utils/enums/http-status';
+
 import * as uploadService from './media.service';
 
 export async function uploadFile(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -10,7 +13,7 @@ export async function uploadFile(req: Request, res: Response, next: NextFunction
     }
 
     const uploadedFile = await uploadService.uploadFile(file, req.user.uid);
-    res.status(201).json(uploadedFile);
+    sendResponse(res, HttpStatus.CREATED, uploadedFile);
   } catch (error) {
     next(error);
   }

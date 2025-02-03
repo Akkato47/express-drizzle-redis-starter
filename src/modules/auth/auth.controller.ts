@@ -1,6 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 
 import config from '@/config';
+import { sendResponse } from '@/lib/reponse';
+import { HttpStatus } from '@/utils/enums/http-status';
 
 import type { CreateUserDto } from '../user/dto/create-user.dto';
 import type { LoginUserDto } from './dto/login.dto';
@@ -26,7 +28,7 @@ export async function register(
       httpOnly: true
     });
 
-    res.send(data.data).status(200);
+    sendResponse(res, HttpStatus.CREATED, data.data);
   } catch (error) {
     next(error);
   }
@@ -50,7 +52,7 @@ export async function login(
       httpOnly: true
     });
 
-    res.send(data.data).status(200);
+    sendResponse(res, HttpStatus.OK, data.data);
   } catch (error) {
     next(error);
   }
@@ -74,7 +76,7 @@ export async function logout(req: Request, res: Response, next: NextFunction): P
 
     await authService.logout(req.user.uid, req.user?.oAuthId);
 
-    res.status(200).json({ message: 'ok' });
+    sendResponse(res, HttpStatus.OK, null);
   } catch (error) {
     next(error);
   }
@@ -98,7 +100,7 @@ export async function oAuth(
       httpOnly: true
     });
 
-    res.send(data.data).status(200);
+    sendResponse(res, HttpStatus.OK, data.data);
   } catch (error) {
     next(error);
   }

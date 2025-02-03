@@ -3,6 +3,7 @@ import { compare } from 'bcrypt';
 
 import config from '@/config';
 import { CustomError } from '@/utils/custom_error';
+import { ErrorMessage } from '@/utils/enums/errors';
 import { HttpStatus } from '@/utils/enums/http-status';
 
 import type { CreateUserDto } from '../user/dto/create-user.dto';
@@ -50,7 +51,7 @@ export const logout = async (uid: string, oAuthId?: string) => {
     if (oAuthId) {
       const result = await jwtService.getTokenOAuthId(oAuthId);
       if (!result) {
-        throw new CustomError(HttpStatus.UNAUTHORIZED);
+        throw new CustomError(HttpStatus.UNAUTHORIZED, ErrorMessage.ERROR_AUTHORIZATION);
       }
 
       const [_, token] = result.res[0].split(':');
@@ -102,7 +103,7 @@ const validateUser = async (userData: LoginUserDto) => {
     const user = await userService.getUserByLoginData(userData);
 
     if (!user || user.password == null) {
-      throw new CustomError(HttpStatus.BAD_REQUEST);
+      throw new CustomError(HttpStatus.BAD_REQUEST, ErrorMessage.ERROR_AUTHORIZATION);
     }
     const passwordEquals = await compare(userData.password, user.password);
 

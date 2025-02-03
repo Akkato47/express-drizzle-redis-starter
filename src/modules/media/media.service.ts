@@ -18,36 +18,44 @@ const isPDF = (mimetype: string) => {
 };
 
 const convertImg = async (rawImg: Express.Multer.File): Promise<sharp.Sharp> => {
-  const img = sharp(rawImg.buffer);
-  const metadata = await img.metadata();
+  try {
+    const img = sharp(rawImg.buffer);
+    const metadata = await img.metadata();
 
-  if (metadata.format === 'webp') {
-    return img;
+    if (metadata.format === 'webp') {
+      return img;
+    }
+
+    return img.webp();
+  } catch (error) {
+    throw error;
   }
-
-  return img.webp();
 };
 
 export const uploadPublicFile = async (buffer: Buffer, extension: string, folder: string) => {
-  const s3 = new S3({
-    accessKeyId: config.bucket.key,
-    secretAccessKey: config.bucket.secret,
-    endpoint: config.bucket.endpoint
-  });
-  let key = '';
-  if (folder === 'PDF') {
-    key = `ITUGRA/PDF/${v4()}${extension}`;
-  } else if (folder === 'images') {
-    key = `ITUGRA/images/${v4()}${extension}`;
+  try {
+    const s3 = new S3({
+      accessKeyId: config.bucket.key,
+      secretAccessKey: config.bucket.secret,
+      endpoint: config.bucket.endpoint
+    });
+    let key = '';
+    if (folder === 'PDF') {
+      key = `ITUGRA/PDF/${v4()}${extension}`;
+    } else if (folder === 'images') {
+      key = `ITUGRA/images/${v4()}${extension}`;
+    }
+    const res = await s3
+      .upload({
+        Bucket: config.bucket.name,
+        Body: buffer,
+        Key: key
+      })
+      .promise();
+    return res;
+  } catch (error) {
+    throw error;
   }
-  const res = await s3
-    .upload({
-      Bucket: config.bucket.name,
-      Body: buffer,
-      Key: key
-    })
-    .promise();
-  return res;
 };
 
 export const uploadFile = async (file: Express.Multer.File, uploaderUid: string) => {
@@ -87,7 +95,7 @@ export const uploadFile = async (file: Express.Multer.File, uploaderUid: string)
         .returning();
       return uploadedFile[0];
     } else {
-      throw new CustomError(HttpStatus.UNSUPPORTED_MEDIA_TYPE, 'Такой формат не поддерживается');
+      throw new CustomError(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
   } catch (error) {
     throw error;
