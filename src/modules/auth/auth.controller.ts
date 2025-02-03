@@ -12,7 +12,7 @@ export async function register(
   req: Request<object, object, CreateUserDto>,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const data = await authService.register(req.body);
 
@@ -26,7 +26,7 @@ export async function register(
       httpOnly: true
     });
 
-    return res.send(data.data).status(200);
+    res.send(data.data).status(200);
   } catch (error) {
     next(error);
   }
@@ -36,7 +36,7 @@ export async function login(
   req: Request<object, object, LoginUserDto>,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const data = await authService.login(req.body);
 
@@ -50,13 +50,13 @@ export async function login(
       httpOnly: true
     });
 
-    return res.send(data.data).status(200);
+    res.send(data.data).status(200);
   } catch (error) {
     next(error);
   }
 }
 
-export async function logout(req: Request, res: Response, next: NextFunction) {
+export async function logout(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     res.cookie(`${config.app.name}-access-token`, '', {
       expires: new Date(0),
@@ -68,12 +68,13 @@ export async function logout(req: Request, res: Response, next: NextFunction) {
     });
 
     if (!req.user) {
-      return res.status(500).json({ message: 'Something went wrong' });
+      res.status(500).json({ message: 'Something went wrong' });
+      return;
     }
 
     await authService.logout(req.user.uid, req.user?.oAuthId);
 
-    return res.status(200).json({ message: 'ok' });
+    res.status(200).json({ message: 'ok' });
   } catch (error) {
     next(error);
   }
@@ -83,7 +84,7 @@ export async function oAuth(
   req: Request<object, object, { code: string; type: OAuthEnum }>,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const data = await authService.oAuth(req.body.code, req.body.type);
 
@@ -97,7 +98,7 @@ export async function oAuth(
       httpOnly: true
     });
 
-    return res.send(data.data).status(200);
+    res.send(data.data).status(200);
   } catch (error) {
     next(error);
   }

@@ -43,7 +43,7 @@ export const init = (async () => {
     const message = err.message || 'Internal Server Error.';
     logger.error(message);
     _next();
-    return res.status(statusCode).json({ success: false, message });
+    res.status(statusCode).json({ success: false, message });
   });
 
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
