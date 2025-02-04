@@ -17,6 +17,8 @@ const isPDF = (mimetype: string) => {
   return mimetype === 'application/pdf';
 };
 
+// TODO: Add CDN integration to upload
+
 const convertImg = async (rawImg: Express.Multer.File): Promise<sharp.Sharp> => {
   try {
     const img = sharp(rawImg.buffer);

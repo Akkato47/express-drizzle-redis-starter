@@ -81,6 +81,10 @@ services:
       MAIL_PASSWORD: ${MAIL_PASSWORD}
       MAIL_FROM: ${MAIL_FROM}
       MAIL_PORT: ${MAIL_PORT}
+      YANDEX_CLIENT_ID: ${YANDEX_CLIENT_ID}
+      YANDEX_CLIENT_SECRET: ${YANDEX_CLIENT_SECRET}
+      YANDEX_BASE_URL: ${YANDEX_BASE_URL}
+      YANDEX_LOGIN_URL: ${YANDEX_LOGIN_URL}
     command: sh -c "npm run migrate:prod && npm run start"
     deploy:
       resources:
