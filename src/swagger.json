@@ -39,7 +39,15 @@
           "200": {
             "description": "User registered successfully",
             "schema": {
-              "$ref": "#/definitions/ApiResponse"
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number"
+                },
+                "message": {
+                  "$ref": "#/definitions/LoginRegistrationResponse"
+                }
+              }
             }
           }
         }
@@ -65,7 +73,15 @@
           "200": {
             "description": "User logged in successfully",
             "schema": {
-              "$ref": "#/definitions/ApiResponse"
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number"
+                },
+                "message": {
+                  "$ref": "#/definitions/LoginRegistrationResponse"
+                }
+              }
             }
           }
         }
@@ -83,7 +99,18 @@
         ],
         "responses": {
           "200": {
-            "description": "User logged out successfully"
+            "description": "User logged out successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number"
+                },
+                "message": {
+                  "type": "null"
+                }
+              }
+            }
           },
           "500": {
             "description": "Something went wrong"
@@ -103,7 +130,18 @@
         ],
         "responses": {
           "200": {
-            "description": "User profile retrieved successfully"
+            "description": "User profile retrieved successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number"
+                },
+                "message": {
+                  "$ref": "#/definitions/CreateUserDto"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
@@ -123,7 +161,7 @@
     }
   },
   "definitions": {
-    "ApiResponse": {
+    "LoginRegistrationResponse": {
       "type": "object",
       "properties": {
         "role": {
@@ -184,6 +222,32 @@
         }
       },
       "required": ["password"]
+    },
+    "GetUserProfileResponse": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "secondName": {
+          "type": "string"
+        },
+        "mail": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "birthDate": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
     }
   }
 }

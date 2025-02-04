@@ -34,6 +34,9 @@ export const init = (async () => {
   app.use(cookieParser());
   app.use(morgan('dev', { stream: new LoggerStream() }));
 
+  app.use('/api', router);
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
   // Security settings
   app.disable('x-powered-by');
   app.disable('etag');
@@ -42,16 +45,13 @@ export const init = (async () => {
     res.setHeader('X-Frame-Options', 'deny');
     res.setHeader('Content-Security-Policy', "default-src 'none'");
     res.setHeader('Referrer-Policy', 'no-referrer');
-    // res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
     res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
     res.setHeader('Feature-Policy', "geolocation 'none'; microphone 'none'; camera 'none'");
 
     res.removeHeader('Server');
     next();
   });
-
-  app.use('/api', router);
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   app.use((_req: Request, _res: Response, next: NextFunction) => {
     next(new CustomError(404, `endpoint ${_req.path} not found`));
