@@ -4,9 +4,9 @@ const logFormat = format.combine(
   format.timestamp({
     format: () => {
       const date = new Date();
-      const utcOffset = 5 * 60 * 60 * 1000; // Смещение +5 часов в миллисекундах
+      const utcOffset = 5 * 60 * 60 * 1000; // +5 UTC
       const localDate = new Date(date.getTime() + utcOffset);
-      return localDate.toISOString().replace('T', ' ').substring(0, 19); // Форматируем дату
+      return localDate.toISOString().replace('T', ' ').substring(0, 19);
     }
   }),
   format.printf((info) => `[${info.timestamp}] - [${info.level.toUpperCase()}] - ${info.message}`),

@@ -11,7 +11,11 @@ export default {
     isProduction,
     isLocale,
     port: env.PORT || 8080,
-    productionUrl: env.PRODUCTION_URL || `localhost:${env.PORT}`
+    productionUrl: env.PRODUCTION_URL || `localhost:${env.PORT}`,
+    rateLimiterSettings: {
+      loginAttempts: +env.LOGIN_RATE_LIMITER_ATTEMPTS,
+      loginTimer: +env.LOGIN_RATE_LIMITER_TIMER_M
+    }
   },
   cors: {
     origin: ['http://localhost:8080', 'http://127.0.0.1:8080', env.CLIENT_BASE_URL],
@@ -35,11 +39,11 @@ export default {
   jwt: {
     access: {
       secret: env.JWT_ACCESS_SECRET,
-      expiresIn: isProduction && !isLocale ? env.ACCESS_TOKEN_EXPIRES_IN : '5m'
+      expiresIn: env.ACCESS_TOKEN_EXPIRES_IN
     },
     refresh: {
       secret: env.JWT_REFRESH_SECRET,
-      expiresIn: isProduction && !isLocale ? env.REFRESH_TOKEN_EXPIRES_IN : '12h'
+      expiresIn: env.REFRESH_TOKEN_EXPIRES_IN
     }
   },
   bucket: {

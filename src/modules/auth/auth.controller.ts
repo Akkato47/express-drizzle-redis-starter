@@ -40,7 +40,7 @@ export async function login(
   next: NextFunction
 ): Promise<void> {
   try {
-    const data = await authService.login(req.body);
+    const data = await authService.login(req.body, req.ip);
 
     res.cookie(`${config.app.name}-access-token`, data.token, {
       expires: new Date(new Date().getTime() + 5 * 60 * 1000),

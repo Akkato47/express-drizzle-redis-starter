@@ -32,10 +32,11 @@ Implemented features in the project:
 - [x] Dockerfile and Docker Compose.
 - [x] Mail sender.
 - [x] S3 uploads.
-- [x] OAuth2.0 authorization via Yandex.
 - [x] Eslint & Prettier.
-- [ ] Testing.
+- [x] OAuth2.0 authorization via Yandex.
 - [ ] OAuth2.0 authorization via VK.
+- [ ] Testing.
+- [ ] CDN.
 - [ ] ELK.
 - [ ] Prometheus and Grafana.
 - [ ] RabbitMQ/Kafka.

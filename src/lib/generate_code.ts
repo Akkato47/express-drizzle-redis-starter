@@ -1,5 +1,5 @@
 export const generateCode = (length = 6) => {
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Все большие буквы
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let code = '';
 
   for (let i = 0; i < length; i++) {

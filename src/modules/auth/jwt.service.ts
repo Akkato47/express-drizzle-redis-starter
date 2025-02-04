@@ -8,6 +8,7 @@ import type { TokenDto } from './dto/create-token.dto';
 import type { OAuthEnum } from './enums/oauth.enum';
 
 interface IStoreToken {
+  expiration: number;
   token: string;
   userUid: string;
 }
@@ -18,9 +19,18 @@ interface IStoreOAuthToken {
   type: OAuthEnum;
 }
 
+export const storeCustomValue = async (keyName: string, value: any, expiration: number) => {
+  await redisClient.SET(keyName, value, { EX: expiration });
+};
+
+export const getCustomValue = async (keyName: string) => {
+  const res = await redisClient.GET(keyName);
+  return res;
+};
+
 const storeToken = async (data: IStoreToken) => {
   const key = `${data.userUid}:${data.token}`;
-  const expiration = 24 * 60 * 60;
+  const expiration = data.expiration * 60 * 60;
   await redisClient.SET(key, 'true', { EX: expiration });
 };
 
@@ -34,7 +44,11 @@ export const createTokenAsync = async (tokenDto: TokenDto) => {
     refresh
   };
 
-  await storeToken({ token: refresh, userUid: tokenDto.uid });
+  await storeToken({
+    token: refresh,
+    userUid: tokenDto.uid,
+    expiration: +config.jwt.refresh.expiresIn.replace('h', '')
+  });
   return res;
 };
 
