@@ -64,7 +64,7 @@ The project is based on the following technologies and libraries:
 
 ## 🔧 Environment Setup
 
-Create a `.env` file in the root folder of the project and fill it with the values based on the `.env.example`:
+Create a `.env` file in the root folder of the project and fill it with the values based on the [ENV EXAMPLE](example.env):
 
 ## ▶️ Running the Application
 
