@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { compare } from 'bcrypt';
 
 import config from '@/config';
@@ -57,19 +56,17 @@ export const logout = async (uid: string, oAuthId?: string) => {
 
       const [_, token] = result.res[0].split(':');
       await jwtService.removeAllTokensByOAuthId(oAuthId);
-      await axios.post<IOAuthTokenResponse>(
-        `${config[result.value].tokenUrl}/revoke_token`,
-        {
+      await fetch(`${config[result.value].tokenUrl}/revoke_token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
           access_token: token,
           client_id: config[result.value].clientID,
           client_secret: config[result.value].clientSecret
-        },
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }
-      );
+        })
+      });
     }
     return true;
   } catch (error) {
@@ -133,52 +130,61 @@ const validateUser = async (userData: LoginUserDto, ip: string) => {
 
 export const oAuth = async (code: string, type: OAuthEnum) => {
   try {
-    const tokens = await axios.post<IOAuthTokenResponse>(
-      `${config[type].tokenUrl}/token`,
-      {
+    const tokenResponse = await fetch(`${config[type].tokenUrl}/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
         grant_type: 'authorization_code',
         code,
         client_id: config[type].clientID,
         client_secret: config[type].clientSecret
-      },
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    );
-    const userData = await axios.get<IOAuthDataResponse>(config[type].loginUrl, {
-      params: {
-        format: 'json',
-        jwt_secret: config.yandexApi.clientSecret,
-        with_openid_identity: 1,
-        oauth_token: tokens.data.access_token
-      }
+      })
     });
-    await jwtService.removeAllTokensByOAuthId(userData.data.id);
+
+    if (!tokenResponse.ok) {
+      throw new Error('Failed to fetch OAuth token');
+    }
+
+    const tokens: IOAuthTokenResponse = await tokenResponse.json();
+
+    const userDataResponse = await fetch(
+      `${config[type].loginUrl}?format=json&jwt_secret=${config.yandexApi.clientSecret}&with_openid_identity=1&oauth_token=${tokens.access_token}`
+    );
+
+    if (!userDataResponse.ok) {
+      throw new Error('Failed to fetch user data');
+    }
+
+    const userData: IOAuthDataResponse = await userDataResponse.json();
+
+    await jwtService.removeAllTokensByOAuthId(userData.id);
     await jwtService.storeOAuthToken({
-      oAuthId: userData.data.id,
-      token: tokens.data.access_token,
+      oAuthId: userData.id,
+      token: tokens.access_token,
       type
     });
 
-    const tryFindUser = await userService.getUserByOAuthId(userData.data.id);
+    const tryFindUser = await userService.getUserByOAuthId(userData.id);
     if (!tryFindUser) {
       const data = await register({
-        oAuthId: userData.data.id,
-        firstName: userData.data.first_name,
-        secondName: userData.data.last_name,
-        mail: userData.data.default_email,
-        phone: userData.data.default_phone.number,
+        oAuthId: userData.id,
+        firstName: userData.first_name,
+        secondName: userData.last_name,
+        mail: userData.default_email,
+        phone: userData.default_phone.number,
         role: 'USER'
       });
       return data;
     }
+
     const payload: TokenDto = {
       role: tryFindUser.role,
       uid: tryFindUser.uid,
-      oAuthId: userData.data.id
+      oAuthId: userData.id
     };
+
     const data = { role: tryFindUser.role };
     return { ...(await jwtService.createTokenAsync(payload)), data };
   } catch (error) {
