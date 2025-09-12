@@ -1,10 +1,12 @@
 import type { Config } from 'drizzle-kit';
 
+import path from 'node:path';
+
 import config from '../../config';
 
 export default {
-  schema: './src/db/drizzle/schema/**/schema.ts',
-  out: './src/db/drizzle/migrations',
+  schema: path.join(__dirname, 'schema', '**', 'schema.ts'),
+  out: path.join(__dirname, 'migrations'),
   dialect: 'postgresql',
   dbCredentials: {
     url: config.database.postgres.url
